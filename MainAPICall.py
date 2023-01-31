@@ -4,109 +4,79 @@ import requests
 
 
 def getAccount(ID, tagline):
-    global puuid, region, accountlvl, name, tag, cardS, cardL, cardW, cardID
-
     response_api = requests.get(
         f'https://api.henrikdev.xyz/valorant/v1/account/{ID}/{tagline}')
     status = response_api.status_code
     data = response_api.text
     raw = json.loads(data)
 
-    # all current account details
-    puuid = raw['data']['puuid']
-    region = raw['data']['region']
-    accountlvl = raw['data']['account_level']
-    name = raw['data']['name']
-    tag = raw['data']['tag']
-    cardS = raw['data']['card']['small']
-    cardL = raw['data']['card']['large']
-    cardW = raw['data']['card']['wide']
-    cardID = raw['data']['card']['id']
+    getAccount = {
+        'puuid': [raw['data']['puuid']],
+        'region': [raw['data']['region']],
+        'accountlvl': [raw['data']['account_level']],
+        'name': [raw['data']['name']],
+        'tag': [raw['data']['tag']],
+        'cardS': [raw['data']['card']['small']],
+        'cardL': [raw['data']['card']['large']],
+        'cardW': [raw['data']['card']['wide']],
+        'cardID': [raw['data']['card']['id']],
+    }
+    return getAccount
 
 
 def getMMRData(region, puuid):
-    global current_tier, current_tier_patched, imageS, imageL, tri_up, tri_down, ranking_in_tier, mmr_change, elo
-
     response_api = requests.get(
         f'https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr/{region}/{puuid}')
     status = response_api.status_code
     data = response_api.text
     raw = json.loads(data)
 
-    # fetches all current MMR data
-    current_tier = raw['data']['currenttier']
-    current_tier_patched = raw['data']['currenttierpatched']
-    imageS = raw['data']['images']['small']
-    imageL = raw['data']['images']['large']
-    tri_up = raw['data']['images']['triangle_down']
-    tri_down = raw['data']['images']['triangle_up']
-    ranking_in_tier = raw['data']['ranking_in_tier']
-    mmr_change = raw['data']['mmr_change_to_last_game']
-    elo = raw['data']['elo']
+    getMMRDataDict = {
+        'current_tier': [raw['data']['currenttier']],
+        'current_tier_patched': [raw['data']['currenttierpatched']],
+        'imageS': [raw['data']['images']['small']],
+        'imageL': [raw['data']['images']['large']],
+        'tri_up': [raw['data']['images']['triangle_up']],
+        'tri_down': [raw['data']['images']['triangle_down']],
+        'ranking_in_tier': [raw['data']['ranking_in_tier']],
+        'mmr_change': [raw['data']['mmr_change_to_last_game']],
+        'elo': [raw['data']['elo']],
+    }
+    return getMMRDataDict
 
 
 def getMMRHistory(region, puuid):
-    global current_tierm1, imageSm1, imageLm1, tri_upm1, tri_downm1, ranking_in_tierm1, mmr_changem1
-    global current_tierm2, imageSm2, imageLm2, tri_upm2, tri_downm2, ranking_in_tierm2, mmr_changem2
-    global current_tierm3, imageSm3, imageLm3, tri_upm3, tri_downm3, ranking_in_tierm3, mmr_changem3
-    global current_tierm4, imageSm4, imageLm4, tri_upm4, tri_downm4, ranking_in_tierm4, mmr_changem4
-    global current_tierm5, imageSm5, imageLm5, tri_upm5, tri_downm5, ranking_in_tierm5, mmr_changem5
-
     response_api = requests.get(
         f'https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr-history/{region}/{puuid}?filter=competitive')
     status = response_api.status_code
     data = response_api.text
     raw = json.loads(data)
 
-    # match1
-    current_tierm1 = raw['data'][0]['currenttierpatched']
-    imageSm1 = raw['data'][0]['images']['small']
-    imageLm1 = raw['data'][0]['images']['large']
-    tri_upm1 = raw['data'][0]['images']['triangle_down']
-    tri_downm1 = raw['data'][0]['images']['triangle_up']
-    ranking_in_tierm1 = raw['data'][0]['ranking_in_tier']
-    mmr_changem1 = raw['data'][0]['mmr_change_to_last_game']
-    elom1 = raw['data'][0]['elo']
+    getMMRHistory = {
+        0: {
+            "current_tier": ["---"],
+            "imageS": ["---"],
+            "imageL": ["---"],
+            "tri_up": ["---"],
+            "tri_down": ["---"],
+            "ranking_in_tier": ["---"],
+            "mmr_change": ["---"],
+            "elo": ["---"]
+        }
+    }
 
-    # match2
-    current_tierm2 = raw['data'][1]['currenttierpatched']
-    imageSm2 = raw['data'][1]['images']['small']
-    imageLm2 = raw['data'][1]['images']['large']
-    tri_upm2 = raw['data'][1]['images']['triangle_down']
-    tri_downm2 = raw['data'][1]['images']['triangle_up']
-    ranking_in_tierm2 = raw['data'][1]['ranking_in_tier']
-    mmr_changem2 = raw['data'][1]['mmr_change_to_last_game']
-    elom2 = raw['data'][1]['elo']
-
-    # match3
-    current_tierm3 = raw['data'][2]['currenttierpatched']
-    imageSm3 = raw['data'][2]['images']['small']
-    imageLm3 = raw['data'][2]['images']['large']
-    tri_upm3 = raw['data'][2]['images']['triangle_down']
-    tri_downm3 = raw['data'][2]['images']['triangle_up']
-    ranking_in_tierm3 = raw['data'][2]['ranking_in_tier']
-    mmr_changem3 = raw['data'][2]['mmr_change_to_last_game']
-    elom3 = raw['data'][2]['elo']
-
-    # match4
-    current_tierm4 = raw['data'][3]['currenttierpatched']
-    imageSm4 = raw['data'][3]['images']['small']
-    imageLm4 = raw['data'][3]['images']['large']
-    tri_upm4 = raw['data'][3]['images']['triangle_down']
-    tri_downm4 = raw['data'][3]['images']['triangle_up']
-    ranking_in_tierm4 = raw['data'][3]['ranking_in_tier']
-    mmr_changem4 = raw['data'][3]['mmr_change_to_last_game']
-    elom4 = raw['data'][3]['elo']
-
-    # match5
-    current_tierm5 = raw['data'][4]['currenttierpatched']
-    imageSm5 = raw['data'][4]['images']['small']
-    imageLm5 = raw['data'][4]['images']['large']
-    tri_upm5 = raw['data'][4]['images']['triangle_down']
-    tri_downm5 = raw['data'][4]['images']['triangle_up']
-    ranking_in_tierm5 = raw['data'][4]['ranking_in_tier']
-    mmr_changem5 = raw['data'][4]['mmr_change_to_last_game']
-    elom5 = raw['data'][4]['elo']
+    for i in range(1, 6):
+        getMMRHistory[i] = {
+            "current_tier": [raw['data'][(i - 1)]['currenttierpatched']],
+            "imageS": [raw['data'][(i - 1)]['images']['small']],
+            "imageL": [raw['data'][(i - 1)]['images']['large']],
+            "tri_up": [raw['data'][(i - 1)]['images']['triangle_down']],
+            "tri_down": [raw['data'][(i - 1)]['images']['triangle_up']],
+            "ranking_in_tier": [raw['data'][(i - 1)]['ranking_in_tier']],
+            "mmr_change": [raw['data'][(i - 1)]['mmr_change_to_last_game']],
+            "elo": [raw['data'][(i - 1)]['elo']]
+        }
+    return getMMRHistory
 
 
 def matchID(region, puuid):
@@ -118,12 +88,17 @@ def matchID(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    # fetches match ID from last 5 games
-    matchID1 = raw['data'][0]['metadata']['matchid']
-    matchID2 = raw['data'][1]['metadata']['matchid']
-    matchID3 = raw['data'][2]['metadata']['matchid']
-    matchID4 = raw['data'][3]['metadata']['matchid']
-    matchID5 = raw['data'][4]['metadata']['matchid']
+    matchID = {
+        0: {
+            "matchID": ["---"],
+        }
+    }
+
+    for i in range(1, 6):
+        matchID[i] = {
+            "current_tier": [raw['data'][(i - 1)]['metadata']['matchid']],
+        }
+    return matchID
 
 
 def matchHistoryPlayer1(matchid):
@@ -570,8 +545,6 @@ def regionVersion(region):
 
 
 def getLeaderboard(region):
-    global leaderboard
-
     response_api = requests.get(
         f'https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}')
     status = response_api.status_code
@@ -592,6 +565,7 @@ def getLeaderboard(region):
             "Tag": [raw[(i - 1)]['tagLine']],
             "Wins": [raw[(i - 1)]['numberOfWins']]
         }
+    return leaderboard
 
 
 inp1 = input("Enter your unique Riot ID:\n\t")

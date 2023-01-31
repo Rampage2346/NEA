@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="test" />
+    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="i think it works">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainAPICall.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainAPICall.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/swaptodict.py" beforeDir="false" afterPath="$PROJECT_DIR$/swaptodict.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,10 +36,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "last_opened_file_path": "G:/NEA (MetaTrak)/login.py",
-    "settings.editor.selected.configurable": "reference.settings.ide.settings.file-colors"
+    "settings.editor.selected.configurable": "file.status.colors"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.swaptodict">
     <configuration name="BasicAPICallGUI" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NEA" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -185,9 +189,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.swaptodict" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.BasicAPICallGUI" />
-        <item itemvalue="Python.swaptodict" />
         <item itemvalue="Python.append" />
         <item itemvalue="Python.GUIBuilder" />
       </list>
@@ -216,7 +220,21 @@
       <option name="project" value="LOCAL" />
       <updated>1675192864555</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="test">
+      <created>1675193481387</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1675193481387</updated>
+    </task>
+    <task id="LOCAL-00004" summary="i think it works">
+      <created>1675193497692</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1675193497692</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -236,6 +254,33 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="main commit" />
     <MESSAGE value="test" />
-    <option name="LAST_COMMIT_MESSAGE" value="test" />
+    <MESSAGE value="i think it works" />
+    <option name="LAST_COMMIT_MESSAGE" value="i think it works" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainAPICall.py</url>
+          <line>47</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainAPICall.py</url>
+          <line>26</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainAPICall.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/MainAPICall.py</url>
+          <line>81</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
