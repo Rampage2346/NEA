@@ -10,6 +10,21 @@ def getAccount(ID, tagline):
     data = response_api.text
     raw = json.loads(data)
 
+    if status == 400:
+        print("Request Error (missing query).")
+    elif status == 403:
+        print("Forbidden to connect to Riot API (mainly maintenance and side patches).")
+    elif status == 404:
+        print("The requested entity was not found.")
+    elif status == 408:
+        print("Timeout while fetching data.")
+    elif status == 429:
+        print("Rate limit reached")
+    elif status == 503:
+        print("Riot API seems to be down, API unable to connect.")
+    else:
+        print("API fully operational.")
+
     getAccount = {
         'puuid': [raw['data']['puuid']],
         'region': [raw['data']['region']],
@@ -24,48 +39,13 @@ def getAccount(ID, tagline):
     return getAccount
 
 
-# ans = getAccount("Rampage", "2346")
-# pp = pprint.PrettyPrinter(sort_dicts=False)
-# pp.pprint(ans)
+# try:
+#     ans = getAccount("Rampage", "2346")
+#     pp = pprint.PrettyPrinter(sort_dicts=False)
+#     pp.pprint(ans)
+# except:
+#     pass
 
-
-def getMMRHistory(region, puuid):
-    response_api = requests.get(
-        f'https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr-history/{region}/{puuid}?filter=competitive')
-    status = response_api.status_code
-    data = response_api.text
-    raw = json.loads(data)
-
-    getMMRHistory = {
-        0: {
-            "current_tier": ["---"],
-            "imageS": ["---"],
-            "imageL": ["---"],
-            "tri_up": ["---"],
-            "tri_down": ["---"],
-            "ranking_in_tier": ["---"],
-            "mmr_change": ["---"],
-            "elo": ["---"]
-        }
-    }
-
-    for i in range(1, 6):
-        getMMRHistory[i] = {
-            "current_tier": [raw['data'][(i - 1)]['currenttierpatched']],
-            "imageS": [raw['data'][(i - 1)]['images']['small']],
-            "imageL": [raw['data'][(i - 1)]['images']['large']],
-            "tri_up": [raw['data'][(i - 1)]['images']['triangle_down']],
-            "tri_down": [raw['data'][(i - 1)]['images']['triangle_up']],
-            "ranking_in_tier": [raw['data'][(i - 1)]['ranking_in_tier']],
-            "mmr_change": [raw['data'][(i - 1)]['mmr_change_to_last_game']],
-            "elo": [raw['data'][(i - 1)]['elo']]
-        }
-    return getMMRHistory
-
-
-# ans2 = getMMRHistory("eu", "59d0eb3c-f800-5840-b043-e0eb26e76ffd")
-# pp = pprint.PrettyPrinter(sort_dicts=False)
-# pp.pprint(ans2)
 
 
 def matchID(region, puuid):
@@ -83,7 +63,7 @@ def matchID(region, puuid):
 
     for i in range(1, 6):
         matchID[i] = {
-            "current_tier": [raw['data'][(i - 1)]['metadata']['matchid']],
+            "matchID": [raw['data'][(i - 1)]['metadata']['matchid']],
         }
     return matchID
 
@@ -185,9 +165,9 @@ def matchHistory(matchid):
     return matchHistoryMetadata, matchHistoryPlayerData
 
 
-ans4 = matchHistory("6f6d0160-a21f-412d-9f26-b3b17e4ba487")
-pp = pprint.PrettyPrinter(sort_dicts=False)
-pp.pprint(ans4)
+# ans4 = matchHistory("6f6d0160-a21f-412d-9f26-b3b17e4ba487")
+# pp = pprint.PrettyPrinter(sort_dicts=False)
+# pp.pprint(ans4)
 
 
 def regionVersion(region):
@@ -206,6 +186,47 @@ def regionVersion(region):
     return regionVersion
 
 
-ans5 = regionVersion("eu")
+# ans5 = regionVersion("eu")
+# pp = pprint.PrettyPrinter(sort_dicts=False)
+# pp.pprint(ans5)
+
+def getMMRHistory(region, puuid):
+    response_api = requests.get(
+        f'https://api.henrikdev.xyz/valorant/v1/by-puuid/mmr-history/{region}/{puuid}?filter=competitive')
+    status = response_api.status_code
+    data = response_api.text
+    raw = json.loads(data)
+
+    # errorCheck(status)
+
+    getMMRHistoryDict = {
+        0: {
+            "current_tier": ["---"],
+            "imageS": ["---"],
+            "imageL": ["---"],
+            "tri_up": ["---"],
+            "tri_down": ["---"],
+            "ranking_in_tier": ["---"],
+            "mmr_change": ["---"],
+            "elo": ["---"]
+        }
+    }
+
+    for i in range(1, 6):
+        getMMRHistoryDict[i] = {
+            "current_tier": [raw['data'][(i - 1)]['currenttierpatched']],
+            "imageS": [raw['data'][(i - 1)]['images']['small']],
+            "imageL": [raw['data'][(i - 1)]['images']['large']],
+            "tri_up": [raw['data'][(i - 1)]['images']['triangle_down']],
+            "tri_down": [raw['data'][(i - 1)]['images']['triangle_up']],
+            "ranking_in_tier": [raw['data'][(i - 1)]['ranking_in_tier']],
+            "mmr_change": [raw['data'][(i - 1)]['mmr_change_to_last_game']],
+            "elo": [raw['data'][(i - 1)]['elo']]
+        }
+    return getMMRHistoryDict
+
+
+ans6 = getMMRHistory("eu", "59d0eb3c-f800-5840-b043-e0eb26e76ffd")
+# ans6 = getMMRHistory("eu", "b2e04f60-68e6-560c-870f-719d47ffaf9d")
 pp = pprint.PrettyPrinter(sort_dicts=False)
-pp.pprint(ans5)
+pp.pprint(ans6)

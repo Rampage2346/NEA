@@ -2,6 +2,25 @@ import pprint
 import json
 import requests
 
+pp = pprint.PrettyPrinter(sort_dicts=False)
+
+
+def errorCheck(status):
+    if status == 400:
+        print("Request Error (missing query).")
+    elif status == 403:
+        print("Forbidden to connect to Riot API (mainly maintenance and side patches).")
+    elif status == 404:
+        print("The requested entity was not found.")
+    elif status == 408:
+        print("Timeout while fetching data.")
+    elif status == 429:
+        print("Rate limit reached")
+    elif status == 503:
+        print("Riot API seems to be down, API unable to connect.")
+    else:
+        print("API fully operational.")
+
 
 def getAccount(ID, tagline):
     response_api = requests.get(
@@ -10,7 +29,9 @@ def getAccount(ID, tagline):
     data = response_api.text
     raw = json.loads(data)
 
-    getAccount = {
+    errorCheck(status)
+
+    getAccountDict = {
         'puuid': [raw['data']['puuid']],
         'region': [raw['data']['region']],
         'accountlvl': [raw['data']['account_level']],
@@ -21,7 +42,7 @@ def getAccount(ID, tagline):
         'cardW': [raw['data']['card']['wide']],
         'cardID': [raw['data']['card']['id']],
     }
-    return getAccount
+    return getAccountDict
 
 
 def getMMRData(region, puuid):
@@ -30,6 +51,8 @@ def getMMRData(region, puuid):
     status = response_api.status_code
     data = response_api.text
     raw = json.loads(data)
+
+    errorCheck(status)
 
     getMMRDataDict = {
         'current_tier': [raw['data']['currenttier']],
@@ -52,7 +75,9 @@ def getMMRHistory(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    getMMRHistory = {
+    errorCheck(status)
+
+    getMMRHistoryDict = {
         0: {
             "current_tier": ["---"],
             "imageS": ["---"],
@@ -65,8 +90,8 @@ def getMMRHistory(region, puuid):
         }
     }
 
-    for i in range(1, 6):
-        getMMRHistory[i] = {
+    for i in range(1, 5):
+        getMMRHistoryDict[i] = {
             "current_tier": [raw['data'][(i - 1)]['currenttierpatched']],
             "imageS": [raw['data'][(i - 1)]['images']['small']],
             "imageL": [raw['data'][(i - 1)]['images']['large']],
@@ -76,7 +101,51 @@ def getMMRHistory(region, puuid):
             "mmr_change": [raw['data'][(i - 1)]['mmr_change_to_last_game']],
             "elo": [raw['data'][(i - 1)]['elo']]
         }
-    return getMMRHistory
+    return getMMRHistoryDict
+
+
+def regionVersion(region):
+    response_api = requests.get(
+        f'https://api.henrikdev.xyz/valorant/v1/version/{region}')
+    status = response_api.status_code
+    data = response_api.text
+    raw = json.loads(data)
+
+    errorCheck(status)
+
+    regionVersionDict = {
+        1: {
+            "status": [raw['status']],
+            "version": [raw['data']['version']]
+        }
+    }
+    return regionVersionDict
+
+
+def getLeaderboard(region):
+    response_api = requests.get(
+        f'https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}')
+    status = response_api.status_code
+    data = response_api.text
+    raw = json.loads(data)
+
+    errorCheck(status)
+
+    leaderboardDict = {
+        0: {
+            "Name": ["test"],
+            "Tag": ["123"],
+            "Wins": ["---"]
+        }
+    }
+
+    for i in range(1, 51):
+        leaderboardDict[i] = {
+            "Name": [raw[(i - 1)]['gameName']],
+            "Tag": [raw[(i - 1)]['tagLine']],
+            "Wins": [raw[(i - 1)]['numberOfWins']]
+        }
+    return leaderboardDict
 
 
 def matchID(region, puuid):
@@ -86,17 +155,19 @@ def matchID(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    matchID = {
+    errorCheck(status)
+
+    matchIDDict = {
         0: {
-            "matchID": ["---"],
+            "match_id": ["---"],
         }
     }
 
     for i in range(1, 6):
-        matchID[i] = {
-            "current_tier": [raw['data'][(i - 1)]['metadata']['matchid']],
+        matchIDDict[i] = {
+            "match_id": [raw['data'][(i - 1)]['metadata']['matchid']],
         }
-    return matchID
+    return matchIDDict
 
 
 def matchHistory(matchid):
@@ -106,7 +177,9 @@ def matchHistory(matchid):
     data = response_api.text
     raw = json.loads(data)
 
-    matchHistoryMetadata = {
+    errorCheck(status)
+
+    matchHistoryMetadataDict = {
         0: {
             "map": ["---"],
             "game_start_patched": ["---"],
@@ -118,7 +191,7 @@ def matchHistory(matchid):
         }
     }
 
-    matchHistoryMetadata = {
+    matchHistoryMetadataDict = {
         1: {
             "map": [raw['data']['metadata']['map']],
             "game_start_patched": [raw['data']['metadata']['game_start_patched']],
@@ -130,7 +203,7 @@ def matchHistory(matchid):
         }
     }
 
-    matchHistoryPlayerData = {
+    matchHistoryPlayerDataDict = {
         0: {
             "puuid": ["---"],
             "name": ["---"],
@@ -167,7 +240,7 @@ def matchHistory(matchid):
     }
 
     for i in range(1, 11):
-        matchHistoryPlayerData[i] = {
+        matchHistoryPlayerDataDict[i] = {
             "puuid": [raw['data']['players']['all_players'][(i - 1)]['puuid']],
             "name": [raw['data']['players']['all_players'][(i - 1)]['name']],
             "tag": [raw['data']['players']['all_players'][(i - 1)]['tag']],
@@ -200,48 +273,34 @@ def matchHistory(matchid):
             "spent_avg": [raw['data']['players']['all_players'][(i - 1)]['economy']['spent']['average']],
             "spent_overall": [raw['data']['players']['all_players'][(i - 1)]['economy']['spent']['overall']]
         }
-    return matchHistoryMetadata, matchHistoryPlayerData
+
+    return matchHistoryMetadataDict, matchHistoryPlayerDataDict
 
 
-def regionVersion(region):
-    response_api = requests.get(
-        f'https://api.henrikdev.xyz/valorant/v1/version/{region}')
-    status = response_api.status_code
-    data = response_api.text
-    raw = json.loads(data)
+def allPlayerData():
+    name = input("Enter your unique Riot ID:\n\t")
+    id = input("Enter your Riot Tagline:\n\t")
 
-    regionVersion = {
-        1: {
-            "status": [raw['status']],
-            "version": [raw['data']['version']]
-        }
-    }
-    return regionVersion
+    getAccountOut = getAccount(name, id)
+    pp.pprint(getAccountOut)
 
+    getMMRDataOut = getMMRData(getAccountOut['region'][0], getAccountOut['puuid'][0])
+    pp.pprint(getMMRDataOut)
 
-def getLeaderboard(region):
-    response_api = requests.get(
-        f'https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}')
-    status = response_api.status_code
-    data = response_api.text
-    raw = json.loads(data)
+    getMMRHistoryOut = getMMRHistory(getAccountOut['region'][0], getAccountOut['puuid'][0])
+    pp.pprint(getMMRHistoryOut)
 
-    leaderboard = {
-        0: {
-            "Name": ["test"],
-            "Tag": ["123"],
-            "Wins": ["---"]
-        }
-    }
+    regionVersionOut = regionVersion(getAccountOut['region'][0])
+    pp.pprint(regionVersionOut)
 
-    for i in range(1, 1001):
-        leaderboard[i] = {
-            "Name": [raw[(i - 1)]['gameName']],
-            "Tag": [raw[(i - 1)]['tagLine']],
-            "Wins": [raw[(i - 1)]['numberOfWins']]
-        }
-    return leaderboard
+    getLeaderboardOut = getLeaderboard(getAccountOut['region'][0])
+    pp.pprint(getLeaderboardOut)
+
+    matchIDOut = matchID(getAccountOut['region'][0], getAccountOut['puuid'][0])
+    pp.pprint(matchIDOut)
+
+    matchHistoryOut = matchHistory(matchIDOut[1]['match_id'][0])
+    pp.pprint(matchHistoryOut)
 
 
-inp1 = input("Enter your unique Riot ID:\n\t")
-inp2 = input("Enter your Riot Tagline:\n\t")
+allPlayerData()
