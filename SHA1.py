@@ -1,8 +1,3 @@
-import pandas as pd
-
-creds = pd.read_csv("creds.csv")
-
-
 def sha1(data):
     bytes = ""
 
@@ -72,66 +67,4 @@ def sha1(data):
     return '%08x%08x%08x%08x%08x' % (h0, h1, h2, h3, h4)
 
 
-def checkPass(inpuser, inppass):
-    accept = False
-    creds = pd.read_csv("creds.csv")
-
-    is_correct_user = (creds['username'] == sha1(inpuser))
-    # print(is_correct_user)
-    is_correct_pass = (creds['password'] == sha1(inppass))
-    # print(is_correct_pass)
-
-    for i in range(0, len(creds)):
-        if is_correct_user[i]:
-            user = True
-            break
-    else:
-        user = False
-
-    for i in range(0, len(creds)):
-        if is_correct_pass[i]:
-            passw = True
-            break
-    else:
-        passw = False
-
-    if user == True and passw == True:
-        accept = True
-
-    return accept
-
-
-def addUser(userN, userP):
-    data = {
-        'username': [sha1(userN)],
-        'password': [sha1(userP)],
-    }
-    df = pd.DataFrame(data)
-    df.to_csv('creds.csv', mode='a', index=False, header=False)
-    print("Data appended successfully.")
-
-
-def login():
-    inpuser = input("Enter your username\n\t")
-    inppass = input("Enter you password\n\t")
-    check = checkPass(inpuser, inppass)
-    return check
-
-
-def mainLogin():
-    add = input("Login or Add New User: L/A\n\t")
-
-    if add == "L":
-        logged_in = login()
-        print(logged_in)
-    elif add == "A":
-        newuser = input("Enter your new username\n\t")
-        newpass = input("Enter your new password\n\t")
-        addUser(newuser, newpass)
-
-    print("-----")
-    df = pd.read_csv('creds.csv')
-    print(df.to_string())
-
-
-mainLogin()
+print(sha1("Lazar Vujovic"))
