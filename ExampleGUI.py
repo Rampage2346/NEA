@@ -44,6 +44,7 @@ def inputWindow():
         [pg.Button('Submit'), pg.Button('Cancel')]
     ]
     inpwindow = pg.Window('Riot API Call', layout)
+
     return inpwindow
 
 

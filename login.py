@@ -118,6 +118,48 @@ def login():
     return check
 
 
+def login_cred_check(inpuser, inppass):
+    characters = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+    ]
+    numbers = [
+        '1', '2', '3', '4', '5',
+        '6', '7', '8', '9', '0'
+    ]
+    usern = [*inpuser]
+    passw = [*inppass]
+
+    for i in range(0, len(usern)):
+        if usern[i] in numbers:
+            tempusern = chr((int((usern[i])))+64)
+            print(tempusern)
+            usern[i] = str(tempusern)
+
+    for i in range(0, len(passw)):
+        if passw[i] in numbers:
+            temppassw = chr((int((passw[i])))+64)
+
+            passw[i] = str(temppassw)
+
+    print(usern)
+    print(passw)
+    inpuser = "".join(usern)
+    inppass = "".join(passw)
+    print(inpuser, inppass)
+    print(type(inpuser), type(inppass))
+
+    check = checkPass(inpuser, inppass)
+    return check
+
+
+a = input("user")
+b = input("pass")
+check_login = login_cred_check(a, b)
+print(check_login)
+
+
+
 def mainLogin():
     add = input("Login or Add New User: L/A\n\t")
 
@@ -133,5 +175,4 @@ def mainLogin():
     df = pd.read_csv('creds.csv')
     print(df.to_string())
 
-
-mainLogin()
+# mainLogin()
