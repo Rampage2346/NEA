@@ -5,21 +5,21 @@ import requests
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
 
-def errorCheck(status):
+def errorCheck(status, function):
     if status == 400:
-        print("Request Error (missing query).")
+        print("Request Error (missing query)." + function)
     elif status == 403:
-        print("Forbidden to connect to Riot API (mainly maintenance and side patches).")
+        print("Forbidden to connect to Riot API (mainly maintenance and side patches)." + function)
     elif status == 404:
-        print("The requested entity was not found.")
+        print("The requested entity was not found." + function)
     elif status == 408:
-        print("Timeout while fetching data.")
+        print("Timeout while fetching data." + function)
     elif status == 429:
-        print("Rate limit reached")
+        print("Rate limit reached" + function)
     elif status == 503:
-        print("Riot API seems to be down, API unable to connect.")
+        print("Riot API seems to be down, API unable to connect." + function)
     else:
-        print("API fully operational.")
+        print("API fully operational." + function)
 
 
 def getAccount(ID, tagline):
@@ -29,7 +29,7 @@ def getAccount(ID, tagline):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "getAccount")
 
     getAccountDict = {
         'puuid': [raw['data']['puuid']],
@@ -52,7 +52,7 @@ def getMMRData(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "getMMRData")
 
     getMMRDataDict = {
         'current_tier': [raw['data']['currenttier']],
@@ -75,7 +75,7 @@ def getMMRHistory(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "getMMRHistory")
 
     getMMRHistoryDict = {
         0: {
@@ -111,7 +111,7 @@ def regionVersion(region):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "regionVersion")
 
     regionVersionDict = {
         1: {
@@ -129,7 +129,7 @@ def getLeaderboard(region):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "getLeaderboard")
 
     leaderboardDict = {
         0: {
@@ -155,7 +155,7 @@ def matchID(region, puuid):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "matchID")
 
     matchIDDict = {
         0: {
@@ -177,7 +177,7 @@ def matchHistory(matchid):
     data = response_api.text
     raw = json.loads(data)
 
-    errorCheck(status)
+    errorCheck(status, "matchHistory")
 
     matchHistoryMetadataDict = {
         0: {
@@ -277,30 +277,30 @@ def matchHistory(matchid):
     return matchHistoryMetadataDict, matchHistoryPlayerDataDict
 
 
-def allPlayerData():
-    name = input("Enter your unique Riot ID:\n\t")
-    id = input("Enter your Riot Tagline:\n\t")
+def allPlayerData(name, id):
 
     getAccountOut = getAccount(name, id)
-    pp.pprint(getAccountOut)
+    # pp.pprint(getAccountOut)
 
     getMMRDataOut = getMMRData(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    pp.pprint(getMMRDataOut)
+    # pp.pprint(getMMRDataOut)
 
     getMMRHistoryOut = getMMRHistory(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    pp.pprint(getMMRHistoryOut)
+    # pp.pprint(getMMRHistoryOut)
 
     regionVersionOut = regionVersion(getAccountOut['region'][0])
-    pp.pprint(regionVersionOut)
+    # pp.pprint(regionVersionOut)
 
     getLeaderboardOut = getLeaderboard(getAccountOut['region'][0])
-    pp.pprint(getLeaderboardOut)
+    # pp.pprint(getLeaderboardOut)
 
     matchIDOut = matchID(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    pp.pprint(matchIDOut)
+    # pp.pprint(matchIDOut)
 
     matchHistoryOut = matchHistory(matchIDOut[1]['match_id'][0])
-    pp.pprint(matchHistoryOut)
+    # pp.pprint(matchHistoryOut)
+
+    return getAccountOut, getMMRDataOut, getMMRHistoryOut, regionVersionOut, getLeaderboardOut, matchIDOut, matchHistoryOut
 
 
-allPlayerData()
+

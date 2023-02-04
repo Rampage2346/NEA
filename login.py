@@ -2,6 +2,11 @@ import pandas as pd
 
 creds = pd.read_csv("creds.csv")
 
+characters = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+]
+
 
 def sha1(data):
     bytes = ""
@@ -111,18 +116,7 @@ def addUser(userN, userP):
     print("Data appended successfully.")
 
 
-def login():
-    inpuser = input("Enter your username\n\t")
-    inppass = input("Enter you password\n\t")
-    check = checkPass(inpuser, inppass)
-    return check
-
-
-def login_cred_check(inpuser, inppass):
-    characters = [
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-    ]
+def new_user_append(inpuser, inppass):
     numbers = [
         '1', '2', '3', '4', '5',
         '6', '7', '8', '9', '0'
@@ -132,13 +126,43 @@ def login_cred_check(inpuser, inppass):
 
     for i in range(0, len(usern)):
         if usern[i] in numbers:
-            tempusern = chr((int((usern[i])))+64)
+            tempusern = chr((int((usern[i]))) + 64)
             print(tempusern)
             usern[i] = str(tempusern)
 
     for i in range(0, len(passw)):
         if passw[i] in numbers:
-            temppassw = chr((int((passw[i])))+64)
+            temppassw = chr((int((passw[i]))) + 64)
+
+            passw[i] = str(temppassw)
+
+    print(usern)
+    print(passw)
+    inpuser = "".join(usern)
+    inppass = "".join(passw)
+    print(inpuser, inppass)
+    print(type(inpuser), type(inppass))
+
+    addUser(inpuser, inppass)
+
+
+def login_cred_check(inpuser, inppass):
+    numbers = [
+        '1', '2', '3', '4', '5',
+        '6', '7', '8', '9', '0'
+    ]
+    usern = [*inpuser]
+    passw = [*inppass]
+
+    for i in range(0, len(usern)):
+        if usern[i] in numbers:
+            tempusern = chr((int((usern[i]))) + 64)
+            print(tempusern)
+            usern[i] = str(tempusern)
+
+    for i in range(0, len(passw)):
+        if passw[i] in numbers:
+            temppassw = chr((int((passw[i]))) + 64)
 
             passw[i] = str(temppassw)
 
@@ -153,18 +177,11 @@ def login_cred_check(inpuser, inppass):
     return check
 
 
-a = input("user")
-b = input("pass")
-check_login = login_cred_check(a, b)
-print(check_login)
-
-
-
 def mainLogin():
     add = input("Login or Add New User: L/A\n\t")
 
     if add == "L":
-        logged_in = login()
+        logged_in = login_no_hash()
         print(logged_in)
     elif add == "A":
         newuser = input("Enter your new username\n\t")
@@ -174,5 +191,12 @@ def mainLogin():
     print("-----")
     df = pd.read_csv('creds.csv')
     print(df.to_string())
+
+
+def login_no_hash():
+    inpuser = input("Enter your username\n\t")
+    inppass = input("Enter you password\n\t")
+    check = checkPass(inpuser, inppass)
+    return check
 
 # mainLogin()
