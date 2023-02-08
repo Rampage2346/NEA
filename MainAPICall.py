@@ -122,7 +122,7 @@ def regionVersion(region):
     return regionVersionDict
 
 
-def getLeaderboard(region):
+def getLeaderboard(region, number):
     response_api = requests.get(
         f'https://api.henrikdev.xyz/valorant/v1/leaderboard/{region}')
     status = response_api.status_code
@@ -139,7 +139,7 @@ def getLeaderboard(region):
         }
     }
 
-    for i in range(1, 51):
+    for i in range(1, (number + 1)):
         leaderboardDict[i] = {
             "Name": [raw[(i - 1)]['gameName']],
             "Tag": [raw[(i - 1)]['tagLine']],
@@ -291,7 +291,7 @@ def allPlayerData(name, id):
     regionVersionOut = regionVersion(getAccountOut['region'][0])
     # pp.pprint(regionVersionOut)
 
-    getLeaderboardOut = getLeaderboard(getAccountOut['region'][0])
+    # getLeaderboardOut = getLeaderboard(getAccountOut['region'][0])
     # pp.pprint(getLeaderboardOut)
 
     matchIDOut = matchID(getAccountOut['region'][0], getAccountOut['puuid'][0])
@@ -300,7 +300,7 @@ def allPlayerData(name, id):
     matchHistoryOut = matchHistory(matchIDOut[1]['match_id'][0])
     # pp.pprint(matchHistoryOut)
 
-    return getAccountOut, getMMRDataOut, getMMRHistoryOut, regionVersionOut, getLeaderboardOut, matchIDOut, matchHistoryOut
+    return getAccountOut, getMMRDataOut, getMMRHistoryOut, regionVersionOut, matchIDOut, matchHistoryOut
 
 
 

@@ -1,6 +1,9 @@
 import PySimpleGUI as sg
 from login import login_cred_check, new_user_append
-from MainAPICall import allPlayerData
+from MainAPICall import allPlayerData, getLeaderboard
+import pprint
+
+pp = pprint.PrettyPrinter(sort_dicts=False)
 
 
 def popup(message):
@@ -22,9 +25,10 @@ def popup(message):
 def login_or_adduser():
     sg.theme('DarkBlue')
     layout = [
+        [sg.Canvas()],
         [sg.Canvas(), sg.Text("Please Choose an Option:"), sg.Canvas()],
+        [sg.Canvas()],
         [sg.Canvas(), sg.Button("I already have an account"), sg.Button("I am a new user"), sg.Canvas()]
-
     ]
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
     event = window.read()
@@ -117,25 +121,44 @@ def api_login():
     popup("You have now logged in or created your new account. Now you will need to provide the Valorant account \n"
           "that you would like to fetch the stats for. This means your IGN and your tagline, the string after the #.\n")
     api_inp_array = api_login_window()
-    all_data(api_inp_array[1][0], api_inp_array[1][1])
+    return api_inp_array[1][0], api_inp_array[1][1]
 
 
 def all_data(name, id):
+    global all_dicts, account_data, mmr_data, mmr_history, region_version, leaderboard, match_id, last_match_data
     all_dicts = allPlayerData(name, id)
     account_data = all_dicts[0]
     mmr_data = all_dicts[1]
     mmr_history = all_dicts[2]
     region_version = all_dicts[3]
-    leaderboard = all_dicts[4]
-    match_id = all_dicts[5]
-    last_match_data = all_dicts[6]
+    # leaderboard = all_dicts[4]
+    match_id = all_dicts[4]
+    last_match_data = all_dicts[5]
+
+
+def leaderboard_window():
+    sg.theme('DarkBlue')
+    layout = [
+        [sg.Text('Enter the number of players you would like to display:')],
+        [sg.InputText()],
+        [sg.Button('Submit'), sg.Button('Cancel')]
+    ]
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    event, values = window.read()
+    window.close()
+
+    return event, values
 
 
 def main():
     main_login()
-    api_login()
+    details = api_login()
+    all_data(details[0], details[1])
+    leader_data = leaderboard_window()
+    print(leader_data)
+    getLeaderboard("eu", int(leader_data[1][0]))
 
-    # all_data()
 
 
 main()
+pp.pprint(leaderboard)
