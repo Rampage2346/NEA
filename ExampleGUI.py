@@ -115,6 +115,7 @@ while True:
         playerTag = allDetails[1]
         playerReg = allDetails[2]
         IDforURL = allDetails[3]
+        print(IDforURL)
 
         card_bytes = requests.get(IDforURL)
 

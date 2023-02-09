@@ -14,7 +14,7 @@ def popup(message):
         [sg.VPush()]
     ]
 
-    window = sg.Window('Test', layout, modal=True, icon='valorant.ico').read(close=True)
+    window = sg.Window('Test', layout, modal=True, icon='valorant.ico', size=(100, 100)).read(close=True)
     window.close()
 
 

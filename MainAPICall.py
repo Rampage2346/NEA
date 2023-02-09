@@ -163,7 +163,7 @@ def matchID(region, puuid):
         }
     }
 
-    for i in range(1, 6):
+    for i in range(1, 2):
         matchIDDict[i] = {
             "match_id": [raw['data'][(i - 1)]['metadata']['matchid']],
         }
@@ -278,29 +278,20 @@ def matchHistory(matchid):
 
 
 def allPlayerData(name, id):
-
     getAccountOut = getAccount(name, id)
-    # pp.pprint(getAccountOut)
-
     getMMRDataOut = getMMRData(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    # pp.pprint(getMMRDataOut)
-
     getMMRHistoryOut = getMMRHistory(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    # pp.pprint(getMMRHistoryOut)
-
     regionVersionOut = regionVersion(getAccountOut['region'][0])
-    # pp.pprint(regionVersionOut)
-
-    # getLeaderboardOut = getLeaderboard(getAccountOut['region'][0])
-    # pp.pprint(getLeaderboardOut)
-
     matchIDOut = matchID(getAccountOut['region'][0], getAccountOut['puuid'][0])
-    # pp.pprint(matchIDOut)
-
     matchHistoryOut = matchHistory(matchIDOut[1]['match_id'][0])
-    # pp.pprint(matchHistoryOut)
 
     return getAccountOut, getMMRDataOut, getMMRHistoryOut, regionVersionOut, matchIDOut, matchHistoryOut
 
 
-
+# a = allPlayerData("Amaz", "4510")
+# pp.pprint(a[0])
+# pp.pprint(a[1])
+# pp.pprint(a[2])
+# pp.pprint(a[3])
+# pp.pprint(a[4])
+# pp.pprint(a[5])
