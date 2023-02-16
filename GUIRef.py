@@ -51,21 +51,23 @@ def make_window(theme=None):
         [name('Image'), pg.Image(pg.EMOJI_BASE64_HAPPY_THUMBS_UP)],
         [name('Graph'), pg.Graph((125, 50), (0, 0), (125, 50), k='-GRAPH-')]]
 
-    layout_r = [[name('Canvas'), pg.Canvas(background_color=pg.theme_button_color()[1], size=(125, 40))],
-                [name('ProgressBar'), pg.ProgressBar(100, orientation='h', s=(10, 20), k='-PBAR-')],
-                [name('Table'), pg.Table([[1, 2, 3], [4, 5, 6]], ['Col 1', 'Col 2', 'Col 3'], num_rows=2)],
-                [name('Tree'), pg.Tree(treedata, ['Heading', ], num_rows=3)],
-                [name('Horizontal Separator'), pg.HSep()],
-                [name('Vertical Separator'), pg.VSep()],
-                [name('Frame'), pg.Frame('Frame', [[pg.T(s=15)]])],
-                [name('Column'), pg.Column([[pg.T(s=15)]])],
-                [name('Tab, TabGroup'), pg.TabGroup([[pg.Tab('Tab1', [[pg.T(s=(15, 2))]]), pg.Tab('Tab2', [[]])]])],
-                [name('Pane'), pg.Pane([pg.Col([[pg.T('Pane 1')]]), pg.Col([[pg.T('Pane 2')]])])],
-                [name('Push'), pg.Push(), pg.T('Pushed over')],
-                [name('VPush'), pg.VPush()],
-                [name('Sizer'), pg.Sizer(1, 1)],
-                [name('StatusBar'), pg.StatusBar('StatusBar')],
-                [name('Sizegrip'), pg.Sizegrip()]]
+    layout_r = [
+        [name('Canvas'), pg.Canvas(background_color=pg.theme_button_color()[1], size=(125, 40))],
+        [name('ProgressBar'), pg.ProgressBar(100, orientation='h', s=(10, 20), k='-PBAR-')],
+        [name('Table'), pg.Table([[1, 2, 3], [4, 5, 6]], ['Col 1', 'Col 2', 'Col 3'], num_rows=2)],
+        [name('Tree'), pg.Tree(treedata, ['Heading', ], num_rows=3)],
+        [name('Horizontal Separator'), pg.HSep()],
+        [name('Vertical Separator'), pg.VSep()],
+        [name('Frame'), pg.Frame('Frame', [[pg.T(s=15)]])],
+        [name('Column'), pg.Column([[pg.T(s=15)]])],
+        [name('Tab, TabGroup'), pg.TabGroup([[pg.Tab('Tab1', [[pg.T(s=(15, 2))]]), pg.Tab('Tab2', [[]])]])],
+        [name('Pane'), pg.Pane([pg.Col([[pg.T('Pane 1')]]), pg.Col([[pg.T('Pane 2')]])])],
+        [name('Push'), pg.Push(), pg.T('Pushed over')],
+        [name('VPush'), pg.VPush()],
+        [name('Sizer'), pg.Sizer(1, 1)],
+        [name('StatusBar'), pg.StatusBar('StatusBar')],
+        [name('Sizegrip'), pg.Sizegrip()]
+    ]
 
     # Note - LOCAL Menu element is used (see about for how that's defined)
     layout = [[Menu([['File', ['Exit']], ['Edit', ['Edit Me', ]]], k='-CUST MENUBAR-', p=0)],

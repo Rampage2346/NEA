@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 import io
 from login import login_cred_check, new_user_append
-from MainAPICall import allPlayerData, getLeaderboard
+from MainAPICall import allPlayerData, getLeaderboard, format_rr
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
@@ -200,31 +200,53 @@ def main_menu():
     ]
 
     main_details = [
-        [sg.Text("Name: " + name)],
-        [sg.Text("Level: " + account_level), sg.Text(region)],
-        [sg.Column(current, justification='c')]
+        [sg.Text("Name: " + name), sg.Text("Level: " + account_level), sg.Text(region)],
+        [sg.Column(current, element_justification='c')]
     ]
+
+    # layout_l = [
+    #     [sg.Column(main_details, justification='c')],
+    #     [sg.Column([[rank]], justification='c')],
+    #     [sg.Column(rank_curr, justification='c')],
+    #     [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar), sg.Text("100")]
+    # ]
 
     layout_l = [
-        [sg.Column(main_details, justification='c')],
+        [sg.Text("Name: " + name), sg.Text("Level: " + account_level), sg.Text(region)],
+        [sg.Text("Current Rank:")],
         [sg.Column([[rank]], justification='c')],
-        [sg.Column(rank_curr, justification='c')],
-        [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar, element_justification='c'), sg.Text("100")]
+        [sg.Text(current_rank, justification='c')],
+        [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar), sg.Text("100")]
     ]
+
+    ct1 = mmr_history[1]["current_tier"][0]
+    mmr1 = mmr_history[1]["mmr_change"][0]
+    ct2 = mmr_history[2]["current_tier"][0]
+    mmr2 = mmr_history[2]["mmr_change"][0]
+    ct3 = mmr_history[3]["current_tier"][0]
+    mmr3 = mmr_history[3]["mmr_change"][0]
+
+    format_rr()
+
+    m1 = sg.Text(ct1), sg.Text(mmr1)
+    m2 = sg.Text(ct2), sg.Text(mmr2)
+    m3 = sg.Text(ct3), sg.Text(mmr3)
 
     layout_r = [
-
+        [sg.Text("Match Overview")],
+        [sg.Canvas()],
+        [m1, m2, m3]
     ]
 
-    layout = [
+    layout_main = [
         [card],
         [sg.HorizontalSeparator()],
-        [sg.VerticalSeparator(), sg.Column(layout_l), sg.VerticalSeparator()],
-        [sg.HorizontalSeparator()]
+        [sg.Column(layout_l, element_justification='c', justification='c')],
+        [sg.HorizontalSeparator()],
+        [sg.Push(), layout_r]
     ]
 
-    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
-    # event, values = window.read()
+    window = sg.Window("MetaTrak", layout_main, icon='valorant.ico')
 
     progress_bar = window['progressbar']
     for i in range(1000):
@@ -232,9 +254,6 @@ def main_menu():
         if event == sg.WIN_CLOSED:
             break
         progress_bar.UpdateBar(ranking_in_tier * 10)
-    # while True:
-    #     event, values = window.read()
-    #     if event
 
     window.close()
 
@@ -252,16 +271,45 @@ def all_data(name, id):
     last_match_data = all_dicts[5]
 
 
-def main():
+def option_menu():
+    layout = [
+        [sg.Button('Submit1'), sg.Canvas(), sg.Button('Submit2')],
+        [sg.Canvas(), sg.Canvas(), sg.Canvas()],
+        [sg.Canvas(), sg.Canvas(), sg.Canvas()],
+        [sg.Button('Submit3'), sg.Canvas(), sg.Button('Cancel')]
+    ]
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    event, values = window.read()
+    window.close()
+
+    return event, values
+
+
+if __name__ == '__main__':
     # main_login()
     details = api_login()
     all_data(details[0], details[1])
-    loading()
+    # loading()
     main_menu()
 
     # leader_data = leaderboard_inp_window()
     # print(leader_data)
     # getLeaderboard("eu", int(leader_data[1][0]))
 
-
-main()
+# def all_data(name, id):
+#     global all_dicts, account_data, mmr_data, mmr_history, region_version, leaderboard, match_id, last_match_data
+#     all_dicts = allPlayerData(name, id)
+#     account_data = all_dicts[0]
+#     mmr_data = all_dicts[1]
+#     mmr_history = all_dicts[2]
+#     region_version = all_dicts[3]
+#     match_id = all_dicts[4]
+#     last_match_data = all_dicts[5]
+#
+#
+# def main():
+#     # main_login()
+#     details = api_login()
+#     all_data(details[0], details[1])
+#     loading()
+#     main_menu()

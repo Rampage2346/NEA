@@ -295,3 +295,22 @@ def allPlayerData(name, id):
 # pp.pprint(a[3])
 # pp.pprint(a[4])
 # pp.pprint(a[5])
+
+
+def format_rr(rr):
+    for i in range(0, len(rr)-1):
+        temp = rr[i]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
