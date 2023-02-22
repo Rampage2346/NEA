@@ -4,7 +4,10 @@ import requests
 from PIL import Image
 import io
 from login import login_cred_check, new_user_append
-from MainAPICall import allPlayerData, getLeaderboard, format_rr
+from MainAPICall import allPlayerData, format_rr
+# import time
+
+# from options import recent_match_summary_option, leader_option, match_breakdown_option
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
@@ -204,13 +207,6 @@ def main_menu():
         [sg.Column(current, element_justification='c')]
     ]
 
-    # layout_l = [
-    #     [sg.Column(main_details, justification='c')],
-    #     [sg.Column([[rank]], justification='c')],
-    #     [sg.Column(rank_curr, justification='c')],
-    #     [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar), sg.Text("100")]
-    # ]
-
     layout_l = [
         [sg.Text("Name: " + name), sg.Text("Level: " + account_level), sg.Text(region)],
         [sg.Text("Current Rank:")],
@@ -226,24 +222,24 @@ def main_menu():
     ct3 = mmr_history[3]["current_tier"][0]
     mmr3 = mmr_history[3]["mmr_change"][0]
 
-    format_rr()
+    rr_array = [mmr1, mmr2, mmr3]
+    main = format_rr(rr_array)
+    print(main)
 
-    m1 = sg.Text(ct1), sg.Text(mmr1)
-    m2 = sg.Text(ct2), sg.Text(mmr2)
-    m3 = sg.Text(ct3), sg.Text(mmr3)
-
-    layout_r = [
-        [sg.Text("Match Overview")],
-        [sg.Canvas()],
-        [m1, m2, m3]
-    ]
+    m1 = sg.Text(ct1), sg.Text(main[0])
+    m2 = sg.Text(ct2), sg.Text(main[1])
+    m3 = sg.Text(ct3), sg.Text(main[2])
 
     layout_main = [
         [card],
         [sg.HorizontalSeparator()],
         [sg.Column(layout_l, element_justification='c', justification='c')],
         [sg.HorizontalSeparator()],
-        [sg.Push(), layout_r]
+        [sg.Text("Match Overview")],
+        [sg.Canvas()],
+        [sg.Push(), m1],
+        [sg.Push(), m2],
+        [sg.Push(), m3]
     ]
 
     window = sg.Window("MetaTrak", layout_main, icon='valorant.ico')
@@ -261,7 +257,7 @@ def main_menu():
 
 
 def all_data(name, id):
-    global all_dicts, account_data, mmr_data, mmr_history, region_version, leaderboard, match_id, last_match_data
+    global all_dicts, account_data, mmr_data, mmr_history, region_version, match_id, last_match_data
     all_dicts = allPlayerData(name, id)
     account_data = all_dicts[0]
     mmr_data = all_dicts[1]
@@ -272,44 +268,76 @@ def all_data(name, id):
 
 
 def option_menu():
-    layout = [
-        [sg.Button('Submit1'), sg.Canvas(), sg.Button('Submit2')],
-        [sg.Canvas(), sg.Canvas(), sg.Canvas()],
-        [sg.Canvas(), sg.Canvas(), sg.Canvas()],
-        [sg.Button('Submit3'), sg.Canvas(), sg.Button('Cancel')]
+    sg.theme('DarkBlue')
+
+    title = [
+        [sg.Text("Please choose an option...")]
     ]
-    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+
+    buttons = [
+        [sg.Button('Recent Match Overview')],
+        [sg.Canvas()],
+        [sg.Button('Leader Board')],
+        [sg.Canvas()],
+        [sg.Button('Specific Match Breakdown')]
+    ]
+
+    layout = [
+        [sg.Column(title, element_justification='c', justification='c')],
+        [sg.Column(buttons, justification='c')]
+    ]
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico', size=(225, 175))
     event, values = window.read()
     window.close()
 
     return event, values
 
 
+def choice(option_choice):
+    if option_choice == "Recent Match Overview":
+        pass
+        # recent_match_summary_option()
+    elif option_choice == "Leader Board":
+        pass
+        # leader_dict = leader_option()
+        # leaderboard_display(leader_dict)
+    elif option_choice == "Specific Match Breakdown":
+        match_breakdown_option()
+
+
+def leaderboard_display(dict):
+    sg.theme('DarkBlue')
+    layout = [
+        [sg.Canvas()],
+        [sg.Canvas(), sg.Text("Please Choose an Option:"), sg.Canvas()],
+        [sg.Canvas()],
+        [sg.Canvas(), sg.Button("I already have an account"), sg.Button("I am a new user"), sg.Canvas()]
+    ]
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    event = window.read()
+    window.close()
+
+    return event
+
+
 if __name__ == '__main__':
     # main_login()
+
     details = api_login()
     all_data(details[0], details[1])
     # loading()
+
+    popup("Close the main menu when you would like to select another option.")
     main_menu()
+    option_choice = option_menu()
+    print(option_choice[0])
 
     # leader_data = leaderboard_inp_window()
     # print(leader_data)
     # getLeaderboard("eu", int(leader_data[1][0]))
 
-# def all_data(name, id):
-#     global all_dicts, account_data, mmr_data, mmr_history, region_version, leaderboard, match_id, last_match_data
-#     all_dicts = allPlayerData(name, id)
-#     account_data = all_dicts[0]
-#     mmr_data = all_dicts[1]
-#     mmr_history = all_dicts[2]
-#     region_version = all_dicts[3]
-#     match_id = all_dicts[4]
-#     last_match_data = all_dicts[5]
-#
-#
-# def main():
-#     # main_login()
-#     details = api_login()
-#     all_data(details[0], details[1])
-#     loading()
-#     main_menu()
+# def leader_option():
+#     leader_data = leaderboard_inp_window()
+#     print(leader_data)
+#     leader_dict = getLeaderboard("eu", int(leader_data[1][0]))
+#     return leader_dict

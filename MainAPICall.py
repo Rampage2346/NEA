@@ -298,8 +298,25 @@ def allPlayerData(name, id):
 
 
 def format_rr(rr):
-    for i in range(0, len(rr)-1):
-        temp = rr[i]
+    main = []
+    negative = False
+    str_rr = []
+    for i in range(0, len(rr)):
+        temp = str(rr[i])
+        str_rr.append(temp)
+
+    print(str_rr)
+    for x in range(0, len(str_rr)):
+        split = [*(str_rr[x])]
+
+        if split[0] != "-":
+            split.insert(0, "+")
+            appended_item = "".join(split)
+            main.append(appended_item)
+        else:
+            appended_item = "".join(split)
+            main.append(appended_item)
+    return main
 
 
 
