@@ -4,7 +4,8 @@ import requests
 from PIL import Image
 import io
 from login import login_cred_check, new_user_append
-from MainAPICall import allPlayerData, format_rr
+from MainAPICall import allPlayerData, format_rr, getLeaderboard
+
 # import time
 
 # from options import recent_match_summary_option, leader_option, match_breakdown_option
@@ -152,20 +153,6 @@ def api_login():
     return api_inp_array[1][0], api_inp_array[1][1]
 
 
-def leaderboard_inp_window():
-    sg.theme('DarkBlue')
-    layout = [
-        [sg.Text('Enter the number of players you would like to display:')],
-        [sg.InputText()],
-        [sg.Button('Submit'), sg.Button('Cancel')]
-    ]
-    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
-    event, values = window.read()
-    window.close()
-
-    return event, values
-
-
 def main_menu():
     sg.theme('DarkBlue')
 
@@ -293,31 +280,182 @@ def option_menu():
     return event, values
 
 
+def recent_match_summary_option():
+    pass
+
+
+def leaderboard_option():
+    leader_dict = getLeaderboard("eu", 1000)
+    pp.pprint(leader_dict)
+    leaderboard_display(leader_dict)
+
+
+def match_breakdown_option():
+    pass
+
+
 def choice(option_choice):
     if option_choice == "Recent Match Overview":
-        pass
-        # recent_match_summary_option()
+        recent_match_summary_option()
     elif option_choice == "Leader Board":
-        pass
-        # leader_dict = leader_option()
-        # leaderboard_display(leader_dict)
+        leaderboard_option()
     elif option_choice == "Specific Match Breakdown":
         match_breakdown_option()
 
 
 def leaderboard_display(dict):
     sg.theme('DarkBlue')
-    layout = [
-        [sg.Canvas()],
-        [sg.Canvas(), sg.Text("Please Choose an Option:"), sg.Canvas()],
-        [sg.Canvas()],
-        [sg.Canvas(), sg.Button("I already have an account"), sg.Button("I am a new user"), sg.Canvas()]
-    ]
-    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
-    event = window.read()
-    window.close()
+    page = 1
 
-    return event
+    def pagedict(pagenum, dictionary):
+        pagestart = (pagenum * 10) - 9
+        pageend = (pagenum * 10)
+        sub_dict = {
+            0: {
+                "name": ["test"],
+                "tag": ["123"],
+                "wins": ["---"]
+            }
+        }
+        for i in range(pagestart, pageend + 1):
+            sub_dict[i] = dictionary[i]
+
+        return sub_dict
+
+    layout = [[sg.Slider(range=(1, 100), orientation='h', size=(10, 20), change_submits=True, key='slider'),
+               sg.Text(str(page), key='text')],
+              [sg.Text("Move", key='rank1'), sg.Text("Slider", key='name1'), sg.Text("To", key='tag1'),
+               sg.Text("Start", key='wins1')],
+
+              [sg.Text("Move", key='rank2'), sg.Text("Slider", key='name2'), sg.Text("To", key='tag2'),
+               sg.Text("Start", key='wins2')],
+
+              [sg.Text("Move", key='rank3'), sg.Text("Slider", key='name3'), sg.Text("To", key='tag3'),
+               sg.Text("Start", key='wins3')],
+
+              [sg.Text("Move", key='rank4'), sg.Text("Slider", key='name4'), sg.Text("To", key='tag4'),
+               sg.Text("Start", key='wins4')],
+
+              [sg.Text("Move", key='rank5'), sg.Text("Slider", key='name5'), sg.Text("To", key='tag5'),
+               sg.Text("Start", key='wins5')],
+
+              [sg.Text("Move", key='rank6'), sg.Text("Slider", key='name6'), sg.Text("To", key='tag6'),
+               sg.Text("Start", key='wins6')],
+
+              [sg.Text("Move", key='rank7'), sg.Text("Slider", key='name7'), sg.Text("To", key='tag7'),
+               sg.Text("Start", key='wins7')],
+
+              [sg.Text("Move", key='rank8'), sg.Text("Slider", key='name8'), sg.Text("To", key='tag8'),
+               sg.Text("Start", key='wins8')],
+
+              [sg.Text("Move", key='rank9'), sg.Text("Slider", key='name9'), sg.Text("To", key='tag9'),
+               sg.Text("Start", key='wins9')],
+
+              [sg.Text("Move", key='rank10'), sg.Text("Slider", key='name10'), sg.Text("To", key='tag10'),
+               sg.Text("Start", key='wins10')],
+
+              ]
+
+    pg = page
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico', grab_anywhere=False, size=(300, 300))
+    # Event Loop
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+
+        pg_slider = int(values['slider'])
+        pg = pg_slider
+        window['slider'].update(56)
+        window['slider'].update(1)
+        if pg != page:
+            players = pagedict(pg, dict)
+            pagestart = (pg * 10) - 9
+            pageend = (pg * 10)
+
+            page = pg
+            window['slider'].update(pg)
+            window['text'].update(pg)
+
+            window['rank1'].update(pagestart)
+            window['name1'].update(players[pagestart]["Name"][0])
+            window['tag1'].update(players[pagestart]["Tag"][0])
+            window['wins1'].update(players[pagestart]["Wins"][0])
+            if players[pagestart]["Name"][0] == "" or players[pagestart]["Tag"][0] == "":
+                window['name1'].update("Anon")
+                window['tag1'].update("Anon")
+
+            window['rank2'].update(pagestart + 1)
+            window['name2'].update(players[pagestart + 1]["Name"][0])
+            window['tag2'].update(players[pagestart + 1]["Tag"][0])
+            window['wins2'].update(players[pagestart + 1]["Wins"][0])
+            if players[pagestart + 1]["Name"][0] == "" or players[pagestart + 1]["Tag"][0] == "":
+                window['name2'].update("Anon")
+                window['tag2'].update("Anon")
+
+            window['rank3'].update(pagestart + 2)
+            window['name3'].update(players[pagestart + 2]["Name"][0])
+            window['tag3'].update(players[pagestart + 2]["Tag"][0])
+            window['wins3'].update(players[pagestart + 2]["Wins"][0])
+            if players[pagestart + 2]["Name"][0] == "" or players[pagestart + 2]["Tag"][0] == "":
+                window['name3'].update("Anon")
+                window['tag3'].update("Anon")
+
+            window['rank4'].update(pagestart + 3)
+            window['name4'].update(players[pagestart + 3]["Name"][0])
+            window['tag4'].update(players[pagestart + 3]["Tag"][0])
+            window['wins4'].update(players[pagestart + 3]["Wins"][0])
+            if players[pagestart + 3]["Name"][0] == "" or players[pagestart + 3]["Tag"][0] == "":
+                window['name4'].update("Anon")
+                window['tag4'].update("Anon")
+
+            window['rank5'].update(pagestart + 4)
+            window['name5'].update(players[pagestart + 4]["Name"][0])
+            window['tag5'].update(players[pagestart + 4]["Tag"][0])
+            window['wins5'].update(players[pagestart + 4]["Wins"][0])
+            if players[pagestart + 4]["Name"][0] == "" or players[pagestart + 4]["Tag"][0] == "":
+                window['name5'].update("Anon")
+                window['tag5'].update("Anon")
+
+            window['rank6'].update(pagestart + 5)
+            window['name6'].update(players[pagestart + 5]["Name"][0])
+            window['tag6'].update(players[pagestart + 5]["Tag"][0])
+            window['wins6'].update(players[pagestart + 5]["Wins"][0])
+            if players[pagestart + 5]["Name"][0] == "" or players[pagestart + 5]["Tag"][0] == "":
+                window['name6'].update("Anon")
+                window['tag6'].update("Anon")
+
+            window['rank7'].update(pagestart + 6)
+            window['name7'].update(players[pagestart + 6]["Name"][0])
+            window['tag7'].update(players[pagestart + 6]["Tag"][0])
+            window['wins7'].update(players[pagestart + 6]["Wins"][0])
+            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
+                window['name7'].update("Anon")
+                window['tag7'].update("Anon")
+
+            window['rank8'].update(pagestart + 7)
+            window['name8'].update(players[pagestart + 7]["Name"][0])
+            window['tag8'].update(players[pagestart + 7]["Tag"][0])
+            window['wins8'].update(players[pagestart + 7]["Wins"][0])
+            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
+                window['name8'].update("Anon")
+                window['tag8'].update("Anon")
+
+            window['rank9'].update(pagestart + 8)
+            window['name9'].update(players[pagestart + 8]["Name"][0])
+            window['tag9'].update(players[pagestart + 8]["Tag"][0])
+            window['wins9'].update(players[pagestart + 8]["Wins"][0])
+            if players[pagestart + 8]["Name"][0] == "" or players[pagestart + 8]["Tag"][0] == "":
+                window['name9'].update("Anon")
+                window['tag9'].update("Anon")
+
+            window['rank10'].update(pagestart + 9)
+            window['name10'].update(players[pagestart + 9]["Name"][0])
+            window['tag10'].update(players[pagestart + 9]["Tag"][0])
+            window['wins10'].update(players[pagestart + 9]["Wins"][0])
+            if players[pagestart + 9]["Name"][0] == "" or players[pagestart + 9]["Tag"][0] == "":
+                window['name10'].update("Anon")
+                window['tag10'].update("Anon")
 
 
 if __name__ == '__main__':
@@ -330,14 +468,10 @@ if __name__ == '__main__':
     popup("Close the main menu when you would like to select another option.")
     main_menu()
     option_choice = option_menu()
+
     print(option_choice[0])
+    choice(option_choice[0])
 
     # leader_data = leaderboard_inp_window()
     # print(leader_data)
     # getLeaderboard("eu", int(leader_data[1][0]))
-
-# def leader_option():
-#     leader_data = leaderboard_inp_window()
-#     print(leader_data)
-#     leader_dict = getLeaderboard("eu", int(leader_data[1][0]))
-#     return leader_dict
