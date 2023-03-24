@@ -106,86 +106,95 @@ def leaderboard_display(dict):
             page = pg
             window['slider'].update(pg)
             window['text'].update(pg)
+            
+            for i in range (1, 11):
+                window[f'rank{i}'].update(pagestart)
+                window['name{i}'].update(players[pagestart]["Name"][i-1])
+                window['tag{i}'].update(players[pagestart]["Tag"][i-1])
+                window['wins{i}'].update(players[pagestart]["Wins"][i-1])
+                if players[pagestart]["Name"][i-1] == "" or players[pagestart]["Tag"][i-1] == "":
+                    window['name{i}'].update("Anon")
+                    window['tag{i}'].update("Anon")
 
-            window['rank1'].update(pagestart)
-            window['name1'].update(players[pagestart]["Name"][0])
-            window['tag1'].update(players[pagestart]["Tag"][0])
-            window['wins1'].update(players[pagestart]["Wins"][0])
-            if players[pagestart]["Name"][0] == "" or players[pagestart]["Tag"][0] == "":
-                window['name1'].update("Anon")
-                window['tag1'].update("Anon")
+#             window['rank1'].update(pagestart)
+#             window['name1'].update(players[pagestart]["Name"][0])
+#             window['tag1'].update(players[pagestart]["Tag"][0])
+#             window['wins1'].update(players[pagestart]["Wins"][0])
+#             if players[pagestart]["Name"][0] == "" or players[pagestart]["Tag"][0] == "":
+#                 window['name1'].update("Anon")
+#                 window['tag1'].update("Anon")
 
-            window['rank2'].update(pagestart + 1)
-            window['name2'].update(players[pagestart + 1]["Name"][0])
-            window['tag2'].update(players[pagestart + 1]["Tag"][0])
-            window['wins2'].update(players[pagestart + 1]["Wins"][0])
-            if players[pagestart + 1]["Name"][0] == "" or players[pagestart + 1]["Tag"][0] == "":
-                window['name2'].update("Anon")
-                window['tag2'].update("Anon")
+#             window['rank2'].update(pagestart + 1)
+#             window['name2'].update(players[pagestart + 1]["Name"][0])
+#             window['tag2'].update(players[pagestart + 1]["Tag"][0])
+#             window['wins2'].update(players[pagestart + 1]["Wins"][0])
+#             if players[pagestart + 1]["Name"][0] == "" or players[pagestart + 1]["Tag"][0] == "":
+#                 window['name2'].update("Anon")
+#                 window['tag2'].update("Anon")
 
-            window['rank3'].update(pagestart + 2)
-            window['name3'].update(players[pagestart + 2]["Name"][0])
-            window['tag3'].update(players[pagestart + 2]["Tag"][0])
-            window['wins3'].update(players[pagestart + 2]["Wins"][0])
-            if players[pagestart + 2]["Name"][0] == "" or players[pagestart + 2]["Tag"][0] == "":
-                window['name3'].update("Anon")
-                window['tag3'].update("Anon")
+#             window['rank3'].update(pagestart + 2)
+#             window['name3'].update(players[pagestart + 2]["Name"][0])
+#             window['tag3'].update(players[pagestart + 2]["Tag"][0])
+#             window['wins3'].update(players[pagestart + 2]["Wins"][0])
+#             if players[pagestart + 2]["Name"][0] == "" or players[pagestart + 2]["Tag"][0] == "":
+#                 window['name3'].update("Anon")
+#                 window['tag3'].update("Anon")
 
-            window['rank4'].update(pagestart + 3)
-            window['name4'].update(players[pagestart + 3]["Name"][0])
-            window['tag4'].update(players[pagestart + 3]["Tag"][0])
-            window['wins4'].update(players[pagestart + 3]["Wins"][0])
-            if players[pagestart + 3]["Name"][0] == "" or players[pagestart + 3]["Tag"][0] == "":
-                window['name4'].update("Anon")
-                window['tag4'].update("Anon")
+#             window['rank4'].update(pagestart + 3)
+#             window['name4'].update(players[pagestart + 3]["Name"][0])
+#             window['tag4'].update(players[pagestart + 3]["Tag"][0])
+#             window['wins4'].update(players[pagestart + 3]["Wins"][0])
+#             if players[pagestart + 3]["Name"][0] == "" or players[pagestart + 3]["Tag"][0] == "":
+#                 window['name4'].update("Anon")
+#                 window['tag4'].update("Anon")
 
-            window['rank5'].update(pagestart + 4)
-            window['name5'].update(players[pagestart + 4]["Name"][0])
-            window['tag5'].update(players[pagestart + 4]["Tag"][0])
-            window['wins5'].update(players[pagestart + 4]["Wins"][0])
-            if players[pagestart + 4]["Name"][0] == "" or players[pagestart + 4]["Tag"][0] == "":
-                window['name5'].update("Anon")
-                window['tag5'].update("Anon")
+#             window['rank5'].update(pagestart + 4)
+#             window['name5'].update(players[pagestart + 4]["Name"][0])
+#             window['tag5'].update(players[pagestart + 4]["Tag"][0])
+#             window['wins5'].update(players[pagestart + 4]["Wins"][0])
+#             if players[pagestart + 4]["Name"][0] == "" or players[pagestart + 4]["Tag"][0] == "":
+#                 window['name5'].update("Anon")
+#                 window['tag5'].update("Anon")
 
-            window['rank6'].update(pagestart + 5)
-            window['name6'].update(players[pagestart + 5]["Name"][0])
-            window['tag6'].update(players[pagestart + 5]["Tag"][0])
-            window['wins6'].update(players[pagestart + 5]["Wins"][0])
-            if players[pagestart + 5]["Name"][0] == "" or players[pagestart + 5]["Tag"][0] == "":
-                window['name6'].update("Anon")
-                window['tag6'].update("Anon")
+#             window['rank6'].update(pagestart + 5)
+#             window['name6'].update(players[pagestart + 5]["Name"][0])
+#             window['tag6'].update(players[pagestart + 5]["Tag"][0])
+#             window['wins6'].update(players[pagestart + 5]["Wins"][0])
+#             if players[pagestart + 5]["Name"][0] == "" or players[pagestart + 5]["Tag"][0] == "":
+#                 window['name6'].update("Anon")
+#                 window['tag6'].update("Anon")
 
-            window['rank7'].update(pagestart + 6)
-            window['name7'].update(players[pagestart + 6]["Name"][0])
-            window['tag7'].update(players[pagestart + 6]["Tag"][0])
-            window['wins7'].update(players[pagestart + 6]["Wins"][0])
-            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
-                window['name7'].update("Anon")
-                window['tag7'].update("Anon")
+#             window['rank7'].update(pagestart + 6)
+#             window['name7'].update(players[pagestart + 6]["Name"][0])
+#             window['tag7'].update(players[pagestart + 6]["Tag"][0])
+#             window['wins7'].update(players[pagestart + 6]["Wins"][0])
+#             if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
+#                 window['name7'].update("Anon")
+#                 window['tag7'].update("Anon")
 
-            window['rank8'].update(pagestart + 7)
-            window['name8'].update(players[pagestart + 7]["Name"][0])
-            window['tag8'].update(players[pagestart + 7]["Tag"][0])
-            window['wins8'].update(players[pagestart + 7]["Wins"][0])
-            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
-                window['name8'].update("Anon")
-                window['tag8'].update("Anon")
+#             window['rank8'].update(pagestart + 7)
+#             window['name8'].update(players[pagestart + 7]["Name"][0])
+#             window['tag8'].update(players[pagestart + 7]["Tag"][0])
+#             window['wins8'].update(players[pagestart + 7]["Wins"][0])
+#             if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
+#                 window['name8'].update("Anon")
+#                 window['tag8'].update("Anon")
 
-            window['rank9'].update(pagestart + 8)
-            window['name9'].update(players[pagestart + 8]["Name"][0])
-            window['tag9'].update(players[pagestart + 8]["Tag"][0])
-            window['wins9'].update(players[pagestart + 8]["Wins"][0])
-            if players[pagestart + 8]["Name"][0] == "" or players[pagestart + 8]["Tag"][0] == "":
-                window['name9'].update("Anon")
-                window['tag9'].update("Anon")
+#             window['rank9'].update(pagestart + 8)
+#             window['name9'].update(players[pagestart + 8]["Name"][0])
+#             window['tag9'].update(players[pagestart + 8]["Tag"][0])
+#             window['wins9'].update(players[pagestart + 8]["Wins"][0])
+#             if players[pagestart + 8]["Name"][0] == "" or players[pagestart + 8]["Tag"][0] == "":
+#                 window['name9'].update("Anon")
+#                 window['tag9'].update("Anon")
 
-            window['rank10'].update(pagestart + 9)
-            window['name10'].update(players[pagestart + 9]["Name"][0])
-            window['tag10'].update(players[pagestart + 9]["Tag"][0])
-            window['wins10'].update(players[pagestart + 9]["Wins"][0])
-            if players[pagestart + 9]["Name"][0] == "" or players[pagestart + 9]["Tag"][0] == "":
-                window['name10'].update("Anon")
-                window['tag10'].update("Anon")
+#             window['rank10'].update(pagestart + 9)
+#             window['name10'].update(players[pagestart + 9]["Name"][0])
+#             window['tag10'].update(players[pagestart + 9]["Tag"][0])
+#             window['wins10'].update(players[pagestart + 9]["Wins"][0])
+#             if players[pagestart + 9]["Name"][0] == "" or players[pagestart + 9]["Tag"][0] == "":
+#                 window['name10'].update("Anon")
+#                 window['tag10'].update("Anon")
 
 
 leaderboard_display(leader_dict)
