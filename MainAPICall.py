@@ -163,7 +163,7 @@ def matchID(region, puuid):
         }
     }
 
-    for i in range(1, 2):
+    for i in range(1, 4):
         matchIDDict[i] = {
             "match_id": [raw['data'][(i - 1)]['metadata']['matchid']],
         }
@@ -305,7 +305,6 @@ def format_rr(rr):
         temp = str(rr[i])
         str_rr.append(temp)
 
-    print(str_rr)
     for x in range(0, len(str_rr)):
         split = [*(str_rr[x])]
 

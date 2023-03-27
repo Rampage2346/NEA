@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 import io
 from login import login_cred_check, new_user_append
-from MainAPICall import allPlayerData, format_rr, getLeaderboard
+from MainAPICall import allPlayerData, format_rr, getLeaderboard, matchID, matchHistory
 
 # import time
 
@@ -211,7 +211,6 @@ def main_menu():
 
     rr_array = [mmr1, mmr2, mmr3]
     main = format_rr(rr_array)
-    print(main)
 
     m1 = sg.Text(ct1), sg.Text(main[0])
     m2 = sg.Text(ct2), sg.Text(main[1])
@@ -252,6 +251,7 @@ def all_data(name, id):
     region_version = all_dicts[3]
     match_id = all_dicts[4]
     last_match_data = all_dicts[5]
+    return all_dicts, account_data, mmr_data, mmr_history, region_version, match_id, last_match_data
 
 
 def option_menu():
@@ -280,13 +280,126 @@ def option_menu():
     return event, values
 
 
-def recent_match_summary_option():
+def recent_match_window():
     pass
+
+
+def recent_match_summary_option(all_dicts, playername):
+    match_arr = []
+    list = ['1', '2', '3']
+
+    for i in range(1, 4):
+        match_arr.append(all_dicts[0][4][i]['match_id'][0])
+    pp.pprint(match_arr)
+
+    match1 = matchHistory(match_arr[0])
+    meta1 = match1[0][1]
+    players1 = match1[1]
+
+    match2 = matchHistory(match_arr[1])
+    meta2 = match2[0][1]
+    players2 = match2[1]
+
+    match3 = matchHistory(match_arr[2])
+    meta3 = match3[0][1]
+    players3 = match3[1]
+
+    print(playername)
+
+    ct1 = mmr_history[1]["current_tier"][0]
+    mmr1 = mmr_history[1]["mmr_change"][0]
+    ct2 = mmr_history[2]["current_tier"][0]
+    mmr2 = mmr_history[2]["mmr_change"][0]
+    ct3 = mmr_history[3]["current_tier"][0]
+    mmr3 = mmr_history[3]["mmr_change"][0]
+
+    rr_array = [mmr1, mmr2, mmr3]
+    main = format_rr(rr_array)
+
+    for i in range(1, 11):
+        name = players1[i]['name'][0]
+        if name == playername:
+            player_pos1 = i
+            print(i)
+
+    for i in range(1, 11):
+        name = players2[i]['name'][0]
+        if name == playername:
+            player_pos2 = i
+            print(i)
+
+    for i in range(1, 11):
+        name = players3[i]['name'][0]
+        if name == playername:
+            player_pos3 = i
+            print(i)
+
+    character1 = players1[player_pos1]['character'][0]
+    image1 = players1[player_pos1]['agent_kill_feed'][0]
+    current_tier1 = players1[player_pos1]['current_tier'][0]
+    kills1 = players1[player_pos1]['kills'][0]
+    deaths1 = players1[player_pos1]['deaths'][0]
+    assists1 = players1[player_pos1]['assists'][0]
+    map1 = meta1['map'][0]
+    mode1 = meta1['mode'][0]
+
+    character2 = players2[player_pos2]['character'][0]
+    image2 = players2[player_pos2]['agent_kill_feed'][0]
+    current_tier2 = players2[player_pos2]['current_tier'][0]
+    kills2 = players2[player_pos2]['kills'][0]
+    deaths2 = players2[player_pos2]['deaths'][0]
+    assists2 = players2[player_pos2]['assists'][0]
+    map2 = meta2['map'][0]
+    mode2 = meta2['mode'][0]
+
+    character3 = players3[player_pos3]['character'][0]
+    image3 = players3[player_pos3]['agent_kill_feed'][0]
+    current_tier3 = players3[player_pos3]['current_tier'][0]
+    kills3 = players3[player_pos3]['kills'][0]
+    deaths3 = players3[player_pos3]['deaths'][0]
+    assists3 = players3[player_pos3]['assists'][0]
+    map3 = meta3['map'][0]
+    mode3 = meta3['mode'][0]
+
+    print(character1, image2, map3)
+
+    card1_bytes = requests.get(image1)
+    card1_image = Image.open(io.BytesIO(card1_bytes.content))
+    card1_png = io.BytesIO()
+    card1_image.save(card1_png, format="PNG")
+    card1_display = card1_png.getvalue()
+
+    card2_bytes = requests.get(image2)
+    card2_image = Image.open(io.BytesIO(card2_bytes.content))
+    card2_png = io.BytesIO()
+    card2_image.save(card2_png, format="PNG")
+    card2_display = card2_png.getvalue()
+
+    card3_bytes = requests.get(image3)
+    card3_image = Image.open(io.BytesIO(card3_bytes.content))
+    card3_png = io.BytesIO()
+    card3_image.save(card3_png, format="PNG")
+    card3_display = card3_png.getvalue()
+
+    im1 = sg.Image(data=card1_display)
+    im2 = sg.Image(data=card2_display)
+    im3 = sg.Image(data=card3_display)
+
+    layout = [
+        [sg.Text("Recent Match Overview")],
+        [im1, ],
+        [im2],
+        [im3]
+    ]
+
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    event, values = window.read()
+    window.close()
+    return event, values
 
 
 def leaderboard_option():
     leader_dict = getLeaderboard("eu", 1000)
-    pp.pprint(leader_dict)
     leaderboard_display(leader_dict)
 
 
@@ -294,13 +407,13 @@ def match_breakdown_option():
     pass
 
 
-def choice(option_choice):
+def choice(option_choice, all_dicts, playername):
     if option_choice == "Recent Match Overview":
-        recent_match_summary_option()
+        recent_match_summary_option(all_dicts, playername)
     elif option_choice == "Leader Board":
         leaderboard_option()
     elif option_choice == "Specific Match Breakdown":
-        match_breakdown_option()
+        match_breakdown_option(all_dicts)
 
 
 def leaderboard_display(dict):
@@ -322,7 +435,7 @@ def leaderboard_display(dict):
 
         return sub_dict
 
-    layout = [[sg.Slider(range=(1, 100), orientation='h', size=(10, 20), change_submits=True, key='slider'),
+    layout = [[sg.Slider(range=(1, 100), orientation='h', change_submits=True, key='slider'),
                sg.Text(str(page), key='text')],
               [sg.Text("Move", key='rank1'), sg.Text("Slider", key='name1'), sg.Text("To", key='tag1'),
                sg.Text("Start", key='wins1')],
@@ -377,100 +490,32 @@ def leaderboard_display(dict):
             window['slider'].update(pg)
             window['text'].update(pg)
 
-            window['rank1'].update(pagestart)
-            window['name1'].update(players[pagestart]["Name"][0])
-            window['tag1'].update(players[pagestart]["Tag"][0])
-            window['wins1'].update(players[pagestart]["Wins"][0])
-            if players[pagestart]["Name"][0] == "" or players[pagestart]["Tag"][0] == "":
-                window['name1'].update("Anon")
-                window['tag1'].update("Anon")
-
-            window['rank2'].update(pagestart + 1)
-            window['name2'].update(players[pagestart + 1]["Name"][0])
-            window['tag2'].update(players[pagestart + 1]["Tag"][0])
-            window['wins2'].update(players[pagestart + 1]["Wins"][0])
-            if players[pagestart + 1]["Name"][0] == "" or players[pagestart + 1]["Tag"][0] == "":
-                window['name2'].update("Anon")
-                window['tag2'].update("Anon")
-
-            window['rank3'].update(pagestart + 2)
-            window['name3'].update(players[pagestart + 2]["Name"][0])
-            window['tag3'].update(players[pagestart + 2]["Tag"][0])
-            window['wins3'].update(players[pagestart + 2]["Wins"][0])
-            if players[pagestart + 2]["Name"][0] == "" or players[pagestart + 2]["Tag"][0] == "":
-                window['name3'].update("Anon")
-                window['tag3'].update("Anon")
-
-            window['rank4'].update(pagestart + 3)
-            window['name4'].update(players[pagestart + 3]["Name"][0])
-            window['tag4'].update(players[pagestart + 3]["Tag"][0])
-            window['wins4'].update(players[pagestart + 3]["Wins"][0])
-            if players[pagestart + 3]["Name"][0] == "" or players[pagestart + 3]["Tag"][0] == "":
-                window['name4'].update("Anon")
-                window['tag4'].update("Anon")
-
-            window['rank5'].update(pagestart + 4)
-            window['name5'].update(players[pagestart + 4]["Name"][0])
-            window['tag5'].update(players[pagestart + 4]["Tag"][0])
-            window['wins5'].update(players[pagestart + 4]["Wins"][0])
-            if players[pagestart + 4]["Name"][0] == "" or players[pagestart + 4]["Tag"][0] == "":
-                window['name5'].update("Anon")
-                window['tag5'].update("Anon")
-
-            window['rank6'].update(pagestart + 5)
-            window['name6'].update(players[pagestart + 5]["Name"][0])
-            window['tag6'].update(players[pagestart + 5]["Tag"][0])
-            window['wins6'].update(players[pagestart + 5]["Wins"][0])
-            if players[pagestart + 5]["Name"][0] == "" or players[pagestart + 5]["Tag"][0] == "":
-                window['name6'].update("Anon")
-                window['tag6'].update("Anon")
-
-            window['rank7'].update(pagestart + 6)
-            window['name7'].update(players[pagestart + 6]["Name"][0])
-            window['tag7'].update(players[pagestart + 6]["Tag"][0])
-            window['wins7'].update(players[pagestart + 6]["Wins"][0])
-            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
-                window['name7'].update("Anon")
-                window['tag7'].update("Anon")
-
-            window['rank8'].update(pagestart + 7)
-            window['name8'].update(players[pagestart + 7]["Name"][0])
-            window['tag8'].update(players[pagestart + 7]["Tag"][0])
-            window['wins8'].update(players[pagestart + 7]["Wins"][0])
-            if players[pagestart + 6]["Name"][0] == "" or players[pagestart + 6]["Tag"][0] == "":
-                window['name8'].update("Anon")
-                window['tag8'].update("Anon")
-
-            window['rank9'].update(pagestart + 8)
-            window['name9'].update(players[pagestart + 8]["Name"][0])
-            window['tag9'].update(players[pagestart + 8]["Tag"][0])
-            window['wins9'].update(players[pagestart + 8]["Wins"][0])
-            if players[pagestart + 8]["Name"][0] == "" or players[pagestart + 8]["Tag"][0] == "":
-                window['name9'].update("Anon")
-                window['tag9'].update("Anon")
-
-            window['rank10'].update(pagestart + 9)
-            window['name10'].update(players[pagestart + 9]["Name"][0])
-            window['tag10'].update(players[pagestart + 9]["Tag"][0])
-            window['wins10'].update(players[pagestart + 9]["Wins"][0])
-            if players[pagestart + 9]["Name"][0] == "" or players[pagestart + 9]["Tag"][0] == "":
-                window['name10'].update("Anon")
-                window['tag10'].update("Anon")
+            for i in range(0, 10):
+                window[f'rank{i + 1}'].update(pagestart + i)
+                window[f'name{i + 1}'].update(players[pagestart + i]["Name"][0])
+                window[f'tag{i + 1}'].update(players[pagestart + i]["Tag"][0])
+                window[f'wins{i + 1}'].update(players[pagestart + i]["Wins"][0])
+                if players[pagestart + i]["Name"][0] == "" or players[pagestart + i]["Tag"][0] == "":
+                    window[f'name{i + 1}'].update("Anon")
+                    window[f'tag{i + 1}'].update("Anon")
 
 
 if __name__ == '__main__':
     # main_login()
 
     details = api_login()
-    all_data(details[0], details[1])
+    all_dicts = all_data(details[0], details[1])
+    pp.pprint(all_dicts[0][0])
+
     # loading()
+    # recent_match_summary_option()
 
     popup("Close the main menu when you would like to select another option.")
     main_menu()
     option_choice = option_menu()
 
     print(option_choice[0])
-    choice(option_choice[0])
+    choice(option_choice[0], all_dicts, details[0])
 
     # leader_data = leaderboard_inp_window()
     # print(leader_data)
