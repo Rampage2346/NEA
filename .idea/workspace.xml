@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="Leaderboard finished">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainAPICall.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainAPICall.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/leaderboardwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/leaderboardwindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainGUI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
-    </list>
+    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="recent match overview implemented" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -323,7 +317,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679519461686</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="recent match overview implemented">
+      <created>1679952265025</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1679952265025</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -334,7 +335,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -357,7 +370,8 @@
     <MESSAGE value="mainmenu() (partial + a bit more)" />
     <MESSAGE value="options menu WIP" />
     <MESSAGE value="Leaderboard finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="Leaderboard finished" />
+    <MESSAGE value="recent match overview implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="recent match overview implemented" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
