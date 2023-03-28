@@ -119,30 +119,30 @@ def main_login():
           "next screen you will need to login or create a new account.")
 
     login_choice = login_or_adduser()
-    print(login_choice)
+    # print(login_choice)
 
     if login_choice[0] == "I already have an account":
         check = False
         login_inp_array = login_window()
         if login_inp_array[0] == 'Cancel' or login_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
-        print(login_inp_array)
+        # print(login_inp_array)
         check = login_cred_check(login_inp_array[1][0], login_inp_array[1][1])
-        print(check)
+        # print(check)
         while check is False:
             popup("Incorrect Username or Password!\nPlease try again.")
             login_inp_array = login_window()
             if login_inp_array[0] == 'Cancel' or login_inp_array[0] == sg.WINDOW_CLOSED:
                 exit()
-            print(login_inp_array)
+            # print(login_inp_array)
             check = login_cred_check(login_inp_array[1][0], login_inp_array[1][1])
-            print(check)
+            # print(check)
 
     elif login_choice[0] == "I am a new user":
         new_user_inp_array = new_user_window()
         if new_user_inp_array[0] == 'Cancel' or new_user_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
-        print(new_user_inp_array)
+        # print(new_user_inp_array)
         new_user_append(new_user_inp_array[1][0], new_user_inp_array[1][1])
 
 
@@ -202,30 +202,11 @@ def main_menu():
         [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar), sg.Text("100")]
     ]
 
-    ct1 = mmr_history[1]["current_tier"][0]
-    mmr1 = mmr_history[1]["mmr_change"][0]
-    ct2 = mmr_history[2]["current_tier"][0]
-    mmr2 = mmr_history[2]["mmr_change"][0]
-    ct3 = mmr_history[3]["current_tier"][0]
-    mmr3 = mmr_history[3]["mmr_change"][0]
-
-    rr_array = [mmr1, mmr2, mmr3]
-    main = format_rr(rr_array)
-
-    m1 = sg.Text(ct1), sg.Text(main[0])
-    m2 = sg.Text(ct2), sg.Text(main[1])
-    m3 = sg.Text(ct3), sg.Text(main[2])
-
     layout_main = [
         [card],
         [sg.HorizontalSeparator()],
         [sg.Column(layout_l, element_justification='c', justification='c')],
-        [sg.HorizontalSeparator()],
-        [sg.Text("Match Overview")],
-        [sg.Canvas()],
-        [sg.Push(), m1],
-        [sg.Push(), m2],
-        [sg.Push(), m3]
+        [sg.HorizontalSeparator()]
     ]
 
     window = sg.Window("MetaTrak", layout_main, icon='valorant.ico')
@@ -280,17 +261,13 @@ def option_menu():
     return event, values
 
 
-def recent_match_window():
-    pass
-
-
 def recent_match_summary_option(all_dicts, playername):
     match_arr = []
     list = ['1', '2', '3']
 
     for i in range(1, 4):
         match_arr.append(all_dicts[0][4][i]['match_id'][0])
-    pp.pprint(match_arr)
+    # pp.pprint(match_arr)
 
     match1 = matchHistory(match_arr[0])
     meta1 = match1[0][1]
@@ -304,13 +281,10 @@ def recent_match_summary_option(all_dicts, playername):
     meta3 = match3[0][1]
     players3 = match3[1]
 
-    print(playername)
+    # print(playername)
 
-    ct1 = mmr_history[1]["current_tier"][0]
     mmr1 = mmr_history[1]["mmr_change"][0]
-    ct2 = mmr_history[2]["current_tier"][0]
     mmr2 = mmr_history[2]["mmr_change"][0]
-    ct3 = mmr_history[3]["current_tier"][0]
     mmr3 = mmr_history[3]["mmr_change"][0]
 
     rr_array = [mmr1, mmr2, mmr3]
@@ -320,19 +294,19 @@ def recent_match_summary_option(all_dicts, playername):
         name = players1[i]['name'][0]
         if name == playername:
             player_pos1 = i
-            print(i)
+            # print(i)
 
     for i in range(1, 11):
         name = players2[i]['name'][0]
         if name == playername:
             player_pos2 = i
-            print(i)
+            # print(i)
 
     for i in range(1, 11):
         name = players3[i]['name'][0]
         if name == playername:
             player_pos3 = i
-            print(i)
+            # print(i)
 
     character1 = players1[player_pos1]['character'][0]
     image1 = players1[player_pos1]['agent_kill_feed'][0]
@@ -361,7 +335,7 @@ def recent_match_summary_option(all_dicts, playername):
     map3 = meta3['map'][0]
     mode3 = meta3['mode'][0]
 
-    print(character1, image2, map3)
+    # print(character1, image2, map3)
 
     card1_bytes = requests.get(image1)
     card1_image = Image.open(io.BytesIO(card1_bytes.content))
@@ -387,9 +361,12 @@ def recent_match_summary_option(all_dicts, playername):
 
     layout = [
         [sg.Text("Recent Match Overview")],
-        [im1, ],
-        [im2],
-        [im3]
+        [im1, sg.Text(current_tier1), sg.Text(mmr1), sg.Text(map1), sg.Text(mode1)],
+        [sg.Text("Kills: " + str(kills1)), sg.Text("Deaths: " + str(deaths1)), sg.Text("Assists: " + str(assists1))],
+        [im2, sg.Text(current_tier2), sg.Text(mmr2), sg.Text(map2), sg.Text(mode2)],
+        [sg.Text("Kills: " + str(kills2)), sg.Text("Deaths: " + str(deaths2)), sg.Text("Assists: " + str(assists2))],
+        [im3, sg.Text(current_tier3), sg.Text(mmr3), sg.Text(map3), sg.Text(mode3)],
+        [sg.Text("Kills: " + str(kills3)), sg.Text("Deaths: " + str(deaths3)), sg.Text("Assists: " + str(assists3))]
     ]
 
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
@@ -403,8 +380,245 @@ def leaderboard_option():
     leaderboard_display(leader_dict)
 
 
-def match_breakdown_option():
-    pass
+def match_breakdown_option(all_dicts):
+    match_id = all_dicts[0][4][1]['match_id'][0]
+    match = matchHistory(match_id)
+    metadata = match[0][1]
+    players = match[1]
+    # pp.pprint(metadata)
+    # print("------------------------------------------------------------")
+    # pp.pprint(players)
+
+    red = []
+    blue = []
+
+    for i in range(1, 11):
+        player_team = players[i]['team'][0]
+        if player_team == "Red":
+            red.append(i)
+        elif player_team == "Blue":
+            blue.append(i)
+
+    print(red)
+    print("-----------")
+    print(blue)
+    print("-----------")
+
+    red1_name = players[red[0]]['name'][0]
+    red1_tag = players[red[0]]['tag'][0]
+    red1_level = players[red[0]]['level'][0]
+    red1_character = players[red[0]]['character'][0]
+    red1_c_casts = players[red[0]]['c_casts'][0]
+    red1_e_casts = players[red[0]]['e_cast'][0]
+    red1_q_casts = players[red[0]]['q_casts'][0]
+    red1_agent_image = players[red[0]]['agent_kill_feed'][0]
+    red1_score = players[red[0]]['score'][0]
+    red1_kills = players[red[0]]['kills'][0]
+    red1_deaths = players[red[0]]['deaths'][0]
+    red1_assists = players[red[0]]['assists'][0]
+    red1_bodyshots = players[red[0]]['bodyshots'][0]
+    red1_headshots = players[red[0]]['headshots'][0]
+    red1_legshots = players[red[0]]['legshots'][0]
+    red1_damage_made = players[red[0]]['damage_made'][0]
+    red1_damage_recieved = players[red[0]]['damage_received'][0]
+    red1_spent_avg = players[red[0]]['spent_avg'][0]
+    red1_spent_overall = players[red[0]]['spent_overall'][0]
+
+    red2_name = players[red[0]]['name'][0]
+    red2_tag = players[red[0]]['tag'][0]
+    red2_level = players[red[0]]['level'][0]
+    red2_character = players[red[0]]['character'][0]
+    red2_c_casts = players[red[0]]['c_casts'][0]
+    red2_e_casts = players[red[0]]['e_cast'][0]
+    red2_q_casts = players[red[0]]['q_casts'][0]
+    red2_agent_image = players[red[0]]['agent_kill_feed'][0]
+    red2_score = players[red[0]]['score'][0]
+    red2_kills = players[red[0]]['kills'][0]
+    red2_deaths = players[red[0]]['deaths'][0]
+    red2_assists = players[red[0]]['assists'][0]
+    red2_bodyshots = players[red[0]]['bodyshots'][0]
+    red2_headshots = players[red[0]]['headshots'][0]
+    red2_legshots = players[red[0]]['legshots'][0]
+    red2_damage_made = players[red[0]]['damage_made'][0]
+    red2_damage_recieved = players[red[0]]['damage_received'][0]
+    red2_spent_avg = players[red[0]]['spent_avg'][0]
+    red2_spent_overall = players[red[0]]['spent_overall'][0]
+
+    red3_name = players[red[0]]['name'][0]
+    red3_tag = players[red[0]]['tag'][0]
+    red3_level = players[red[0]]['level'][0]
+    red3_character = players[red[0]]['character'][0]
+    red3_c_casts = players[red[0]]['c_casts'][0]
+    red3_e_casts = players[red[0]]['e_cast'][0]
+    red3_q_casts = players[red[0]]['q_casts'][0]
+    red3_agent_image = players[red[0]]['agent_kill_feed'][0]
+    red3_score = players[red[0]]['score'][0]
+    red3_kills = players[red[0]]['kills'][0]
+    red3_deaths = players[red[0]]['deaths'][0]
+    red3_assists = players[red[0]]['assists'][0]
+    red3_bodyshots = players[red[0]]['bodyshots'][0]
+    red3_headshots = players[red[0]]['headshots'][0]
+    red3_legshots = players[red[0]]['legshots'][0]
+    red3_damage_made = players[red[0]]['damage_made'][0]
+    red3_damage_recieved = players[red[0]]['damage_received'][0]
+    red3_spent_avg = players[red[0]]['spent_avg'][0]
+    red3_spent_overall = players[red[0]]['spent_overall'][0]
+
+    red4_name = players[red[0]]['name'][0]
+    red4_tag = players[red[0]]['tag'][0]
+    red4_level = players[red[0]]['level'][0]
+    red4_character = players[red[0]]['character'][0]
+    red4_c_casts = players[red[0]]['c_casts'][0]
+    red4_e_casts = players[red[0]]['e_cast'][0]
+    red4_q_casts = players[red[0]]['q_casts'][0]
+    red4_agent_image = players[red[0]]['agent_kill_feed'][0]
+    red4_score = players[red[0]]['score'][0]
+    red4_kills = players[red[0]]['kills'][0]
+    red4_deaths = players[red[0]]['deaths'][0]
+    red4_assists = players[red[0]]['assists'][0]
+    red4_bodyshots = players[red[0]]['bodyshots'][0]
+    red4_headshots = players[red[0]]['headshots'][0]
+    red4_legshots = players[red[0]]['legshots'][0]
+    red4_damage_made = players[red[0]]['damage_made'][0]
+    red4_damage_recieved = players[red[0]]['damage_received'][0]
+    red4_spent_avg = players[red[0]]['spent_avg'][0]
+    red4_spent_overall = players[red[0]]['spent_overall'][0]
+
+    red5_name = players[red[0]]['name'][0]
+    red5_tag = players[red[0]]['tag'][0]
+    red5_level = players[red[0]]['level'][0]
+    red5_character = players[red[0]]['character'][0]
+    red5_c_casts = players[red[0]]['c_casts'][0]
+    red5_e_casts = players[red[0]]['e_cast'][0]
+    red5_q_casts = players[red[0]]['q_casts'][0]
+    red5_agent_image = players[red[0]]['agent_kill_feed'][0]
+    red5_score = players[red[0]]['score'][0]
+    red5_kills = players[red[0]]['kills'][0]
+    red5_deaths = players[red[0]]['deaths'][0]
+    red5_assists = players[red[0]]['assists'][0]
+    red5_bodyshots = players[red[0]]['bodyshots'][0]
+    red5_headshots = players[red[0]]['headshots'][0]
+    red5_legshots = players[red[0]]['legshots'][0]
+    red5_damage_made = players[red[0]]['damage_made'][0]
+    red5_damage_recieved = players[red[0]]['damage_received'][0]
+    red5_spent_avg = players[red[0]]['spent_avg'][0]
+    red5_spent_overall = players[red[0]]['spent_overall'][0]
+
+    blue1_name = players[blue[0]]['name'][0]
+    blue1_tag = players[blue[0]]['tag'][0]
+    blue1_level = players[blue[0]]['level'][0]
+    blue1_character = players[blue[0]]['character'][0]
+    blue1_c_casts = players[blue[0]]['c_casts'][0]
+    blue1_e_casts = players[blue[0]]['e_cast'][0]
+    blue1_q_casts = players[blue[0]]['q_casts'][0]
+    blue1_agent_image = players[blue[0]]['agent_kill_feed'][0]
+    blue1_score = players[blue[0]]['score'][0]
+    blue1_kills = players[blue[0]]['kills'][0]
+    blue1_deaths = players[blue[0]]['deaths'][0]
+    blue1_assists = players[blue[0]]['assists'][0]
+    blue1_bodyshots = players[blue[0]]['bodyshots'][0]
+    blue1_headshots = players[blue[0]]['headshots'][0]
+    blue1_legshots = players[blue[0]]['legshots'][0]
+    blue1_damage_made = players[blue[0]]['damage_made'][0]
+    blue1_damage_recieved = players[blue[0]]['damage_received'][0]
+    blue1_spent_avg = players[blue[0]]['spent_avg'][0]
+    blue1_spent_overall = players[blue[0]]['spent_overall'][0]
+
+    blue2_name = players[blue[0]]['name'][0]
+    blue2_tag = players[blue[0]]['tag'][0]
+    blue2_level = players[blue[0]]['level'][0]
+    blue2_character = players[blue[0]]['character'][0]
+    blue2_c_casts = players[blue[0]]['c_casts'][0]
+    blue2_e_casts = players[blue[0]]['e_cast'][0]
+    blue2_q_casts = players[blue[0]]['q_casts'][0]
+    blue2_agent_image = players[blue[0]]['agent_kill_feed'][0]
+    blue2_score = players[blue[0]]['score'][0]
+    blue2_kills = players[blue[0]]['kills'][0]
+    blue2_deaths = players[blue[0]]['deaths'][0]
+    blue2_assists = players[blue[0]]['assists'][0]
+    blue2_bodyshots = players[blue[0]]['bodyshots'][0]
+    blue2_headshots = players[blue[0]]['headshots'][0]
+    blue2_legshots = players[blue[0]]['legshots'][0]
+    blue2_damage_made = players[blue[0]]['damage_made'][0]
+    blue2_damage_recieved = players[blue[0]]['damage_received'][0]
+    blue2_spent_avg = players[blue[0]]['spent_avg'][0]
+    blue2_spent_overall = players[blue[0]]['spent_overall'][0]
+
+    blue3_name = players[blue[0]]['name'][0]
+    blue3_tag = players[blue[0]]['tag'][0]
+    blue3_level = players[blue[0]]['level'][0]
+    blue3_character = players[blue[0]]['character'][0]
+    blue3_c_casts = players[blue[0]]['c_casts'][0]
+    blue3_e_casts = players[blue[0]]['e_cast'][0]
+    blue3_q_casts = players[blue[0]]['q_casts'][0]
+    blue3_agent_image = players[blue[0]]['agent_kill_feed'][0]
+    blue3_score = players[blue[0]]['score'][0]
+    blue3_kills = players[blue[0]]['kills'][0]
+    blue3_deaths = players[blue[0]]['deaths'][0]
+    blue3_assists = players[blue[0]]['assists'][0]
+    blue3_bodyshots = players[blue[0]]['bodyshots'][0]
+    blue3_headshots = players[blue[0]]['headshots'][0]
+    blue3_legshots = players[blue[0]]['legshots'][0]
+    blue3_damage_made = players[blue[0]]['damage_made'][0]
+    blue3_damage_recieved = players[blue[0]]['damage_received'][0]
+    blue3_spent_avg = players[blue[0]]['spent_avg'][0]
+    blue3_spent_overall = players[blue[0]]['spent_overall'][0]
+
+    blue4_name = players[blue[0]]['name'][0]
+    blue4_tag = players[blue[0]]['tag'][0]
+    blue4_level = players[blue[0]]['level'][0]
+    blue4_character = players[blue[0]]['character'][0]
+    blue4_c_casts = players[blue[0]]['c_casts'][0]
+    blue4_e_casts = players[blue[0]]['e_cast'][0]
+    blue4_q_casts = players[blue[0]]['q_casts'][0]
+    blue4_agent_image = players[blue[0]]['agent_kill_feed'][0]
+    blue4_score = players[blue[0]]['score'][0]
+    blue4_kills = players[blue[0]]['kills'][0]
+    blue4_deaths = players[blue[0]]['deaths'][0]
+    blue4_assists = players[blue[0]]['assists'][0]
+    blue4_bodyshots = players[blue[0]]['bodyshots'][0]
+    blue4_headshots = players[blue[0]]['headshots'][0]
+    blue4_legshots = players[blue[0]]['legshots'][0]
+    blue4_damage_made = players[blue[0]]['damage_made'][0]
+    blue4_damage_recieved = players[blue[0]]['damage_received'][0]
+    blue4_spent_avg = players[blue[0]]['spent_avg'][0]
+    blue4_spent_overall = players[blue[0]]['spent_overall'][0]
+
+    blue5_name = players[blue[0]]['name'][0]
+    blue5_tag = players[blue[0]]['tag'][0]
+    blue5_level = players[blue[0]]['level'][0]
+    blue5_character = players[blue[0]]['character'][0]
+    blue5_c_casts = players[blue[0]]['c_casts'][0]
+    blue5_e_casts = players[blue[0]]['e_cast'][0]
+    blue5_q_casts = players[blue[0]]['q_casts'][0]
+    blue5_agent_image = players[blue[0]]['agent_kill_feed'][0]
+    blue5_score = players[blue[0]]['score'][0]
+    blue5_kills = players[blue[0]]['kills'][0]
+    blue5_deaths = players[blue[0]]['deaths'][0]
+    blue5_assists = players[blue[0]]['assists'][0]
+    blue5_bodyshots = players[blue[0]]['bodyshots'][0]
+    blue5_headshots = players[blue[0]]['headshots'][0]
+    blue5_legshots = players[blue[0]]['legshots'][0]
+    blue5_damage_made = players[blue[0]]['damage_made'][0]
+    blue5_damage_recieved = players[blue[0]]['damage_received'][0]
+    blue5_spent_avg = players[blue[0]]['spent_avg'][0]
+    blue5_spent_overall = players[blue[0]]['spent_overall'][0]
+
+
+
+
+    tab1_layout = [
+
+    ]
+
+    layout = [
+        [sg.Text("sadf")]
+    ]
+
+    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    event, values = window.read()
+    window.close()
+    return event, values
 
 
 def choice(option_choice, all_dicts, playername):
@@ -505,7 +719,7 @@ if __name__ == '__main__':
 
     details = api_login()
     all_dicts = all_data(details[0], details[1])
-    pp.pprint(all_dicts[0][0])
+    # pp.pprint(all_dicts[0][0])
 
     # loading()
     # recent_match_summary_option()
@@ -514,7 +728,7 @@ if __name__ == '__main__':
     main_menu()
     option_choice = option_menu()
 
-    print(option_choice[0])
+    # print(option_choice[0])
     choice(option_choice[0], all_dicts, details[0])
 
     # leader_data = leaderboard_inp_window()
