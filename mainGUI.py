@@ -380,6 +380,22 @@ def leaderboard_option():
     leaderboard_display(leader_dict)
 
 
+types_of_data = ['name', 'tag', 'team', 'level', 'character', 'c_casts', 'e_cast', 'q_casts', 'agent_kill_feed', 'score', 'kills', 'deaths', 'assists', 'bodyshots', 'headshots', 'legshots',
+                 'damage_made', 'damage_received', 'spent_avg', 'spent_overall']
+
+
+def define_players(player: int, red_players: dict, blue_players: dict, players):
+    if players[player]['team'][0] == "Red":
+        name = f"red{(len(red_players) // 20) + 1}"
+        for item in types_of_data:
+            red_players[f"{name}_{item}"] = players[player][item][0]
+    else:
+        name = f"blue_{(len(blue_players) // 20) + 1}"
+        for item in types_of_data:
+            blue_players[f"{name}_{item}"] = players[player][item][0]
+    return red_players, blue_players
+
+
 def match_breakdown_option(all_dicts):
     sg.theme('DarkBlue')
 
@@ -406,28 +422,13 @@ def match_breakdown_option(all_dicts):
     print(blue)
     print("-----------")
 
-    def define_players(player: str, players_dict: dict):
-        for item in types_of_data:
-            players_dict[f"{str(player)}{item}"] = players[player][item][0]
-
-        return players_dict
-
-    players = [str(x) for x in range(1, 11)]
-
-    types_of_data = ['name', 'tag', 'level', '', 'c_casts', 'e_cast', 'q_casts', 'agent_kill_feed', \
-                     'score', 'kills', 'deaths', 'assists', 'bodyshots', 'headshots', 'legshots', \
-                     'damage_made', 'damage_recieved', 'spent_avg', 'spent_overall']
-
-    players_dict = {}
-
-    for player in players:
-        players_dict = define_players(player, players_dict)
-    pp.pprint(players_dict)
-
-
-
-
-
+    # asdasd
+    red_players = {}
+    blue_players = {}
+    for player in range(1, 11):
+        red_players, blue_players = define_players(player, red_players, blue_players, players)
+    pp.pprint(red_players)
+    pp.pprint(blue_players)
 
     # red1_name = players[red[0]]['name'][0]
     # red1_tag = players[red[0]]['tag'][0]
@@ -629,9 +630,6 @@ def match_breakdown_option(all_dicts):
     # blue5_spent_avg = players[blue[4]]['spent_avg'][0]
     # blue5_spent_overall = players[blue[4]]['spent_overall'][0]
 
-
-
-
     # red1_tab = [
     #     [sg.Text(blue5_level)],
     #     [sg.Text(blue5_level)],
@@ -651,9 +649,6 @@ def match_breakdown_option(all_dicts):
     #     [sg.Text(blue5_level)],
     #     [sg.Text(blue5_level)],
     # ]
-
-
-
 
     layout = [
         [sg.Text("sadf")]
