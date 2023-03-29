@@ -380,7 +380,8 @@ def leaderboard_option():
     leaderboard_display(leader_dict)
 
 
-types_of_data = ['name', 'tag', 'team', 'level', 'character', 'c_casts', 'e_cast', 'q_casts', 'agent_kill_feed', 'score', 'kills', 'deaths', 'assists', 'bodyshots', 'headshots', 'legshots',
+types_of_data = ['name', 'tag', 'team', 'level', 'character', 'c_casts', 'e_cast', 'q_casts', 'agent_kill_feed',
+                 'score', 'kills', 'deaths', 'assists', 'bodyshots', 'headshots', 'legshots',
                  'damage_made', 'damage_received', 'spent_avg', 'spent_overall']
 
 
@@ -390,7 +391,7 @@ def define_players(player: int, red_players: dict, blue_players: dict, players):
         for item in types_of_data:
             red_players[f"{name}_{item}"] = players[player][item][0]
     else:
-        name = f"blue_{(len(blue_players) // 20) + 1}"
+        name = f"blue{(len(blue_players) // 20) + 1}"
         for item in types_of_data:
             blue_players[f"{name}_{item}"] = players[player][item][0]
     return red_players, blue_players
@@ -430,228 +431,190 @@ def match_breakdown_option(all_dicts):
     pp.pprint(red_players)
     pp.pprint(blue_players)
 
-    # red1_name = players[red[0]]['name'][0]
-    # red1_tag = players[red[0]]['tag'][0]
-    # red1_level = players[red[0]]['level'][0]
-    # red1_character = players[red[0]]['character'][0]
-    # red1_c_casts = players[red[0]]['c_casts'][0]
-    # red1_e_casts = players[red[0]]['e_cast'][0]
-    # red1_q_casts = players[red[0]]['q_casts'][0]
-    # red1_agent_image = players[red[0]]['agent_kill_feed'][0]
-    # red1_score = players[red[0]]['score'][0]
-    # red1_kills = players[red[0]]['kills'][0]
-    # red1_deaths = players[red[0]]['deaths'][0]
-    # red1_assists = players[red[0]]['assists'][0]
-    # red1_bodyshots = players[red[0]]['bodyshots'][0]
-    # red1_headshots = players[red[0]]['headshots'][0]
-    # red1_legshots = players[red[0]]['legshots'][0]
-    # red1_damage_made = players[red[0]]['damage_made'][0]
-    # red1_damage_recieved = players[red[0]]['damage_received'][0]
-    # red1_spent_avg = players[red[0]]['spent_avg'][0]
-    # red1_spent_overall = players[red[0]]['spent_overall'][0]
-    #
-    # red2_name = players[red[1]]['name'][0]
-    # red2_tag = players[red[1]]['tag'][0]
-    # red2_level = players[red[1]]['level'][0]
-    # red2_character = players[red[1]]['character'][0]
-    # red2_c_casts = players[red[1]]['c_casts'][0]
-    # red2_e_casts = players[red[1]]['e_cast'][0]
-    # red2_q_casts = players[red[1]]['q_casts'][0]
-    # red2_agent_image = players[red[1]]['agent_kill_feed'][0]
-    # red2_score = players[red[1]]['score'][0]
-    # red2_kills = players[red[1]]['kills'][0]
-    # red2_deaths = players[red[1]]['deaths'][0]
-    # red2_assists = players[red[1]]['assists'][0]
-    # red2_bodyshots = players[red[1]]['bodyshots'][0]
-    # red2_headshots = players[red[1]]['headshots'][0]
-    # red2_legshots = players[red[1]]['legshots'][0]
-    # red2_damage_made = players[red[1]]['damage_made'][0]
-    # red2_damage_recieved = players[red[1]]['damage_received'][0]
-    # red2_spent_avg = players[red[1]]['spent_avg'][0]
-    # red2_spent_overall = players[red[1]]['spent_overall'][0]
-    #
-    # red3_name = players[red[2]]['name'][0]
-    # red3_tag = players[red[2]]['tag'][0]
-    # red3_level = players[red[2]]['level'][0]
-    # red3_character = players[red[2]]['character'][0]
-    # red3_c_casts = players[red[2]]['c_casts'][0]
-    # red3_e_casts = players[red[2]]['e_cast'][0]
-    # red3_q_casts = players[red[2]]['q_casts'][0]
-    # red3_agent_image = players[red[2]]['agent_kill_feed'][0]
-    # red3_score = players[red[2]]['score'][0]
-    # red3_kills = players[red[2]]['kills'][0]
-    # red3_deaths = players[red[2]]['deaths'][0]
-    # red3_assists = players[red[2]]['assists'][0]
-    # red3_bodyshots = players[red[2]]['bodyshots'][0]
-    # red3_headshots = players[red[2]]['headshots'][0]
-    # red3_legshots = players[red[2]]['legshots'][0]
-    # red3_damage_made = players[red[2]]['damage_made'][0]
-    # red3_damage_recieved = players[red[2]]['damage_received'][0]
-    # red3_spent_avg = players[red[2]]['spent_avg'][0]
-    # red3_spent_overall = players[red[2]]['spent_overall'][0]
-    #
-    # red4_name = players[red[3]]['name'][0]
-    # red4_tag = players[red[3]]['tag'][0]
-    # red4_level = players[red[3]]['level'][0]
-    # red4_character = players[red[3]]['character'][0]
-    # red4_c_casts = players[red[3]]['c_casts'][0]
-    # red4_e_casts = players[red[3]]['e_cast'][0]
-    # red4_q_casts = players[red[3]]['q_casts'][0]
-    # red4_agent_image = players[red[3]]['agent_kill_feed'][0]
-    # red4_score = players[red[3]]['score'][0]
-    # red4_kills = players[red[3]]['kills'][0]
-    # red4_deaths = players[red[3]]['deaths'][0]
-    # red4_assists = players[red[3]]['assists'][0]
-    # red4_bodyshots = players[red[3]]['bodyshots'][0]
-    # red4_headshots = players[red[3]]['headshots'][0]
-    # red4_legshots = players[red[3]]['legshots'][0]
-    # red4_damage_made = players[red[3]]['damage_made'][0]
-    # red4_damage_recieved = players[red[3]]['damage_received'][0]
-    # red4_spent_avg = players[red[3]]['spent_avg'][0]
-    # red4_spent_overall = players[red[3]]['spent_overall'][0]
-    #
-    # red5_name = players[red[4]]['name'][0]
-    # red5_tag = players[red[4]]['tag'][0]
-    # red5_level = players[red[4]]['level'][0]
-    # red5_character = players[red[4]]['character'][0]
-    # red5_c_casts = players[red[4]]['c_casts'][0]
-    # red5_e_casts = players[red[4]]['e_cast'][0]
-    # red5_q_casts = players[red[4]]['q_casts'][0]
-    # red5_agent_image = players[red[4]]['agent_kill_feed'][0]
-    # red5_score = players[red[4]]['score'][0]
-    # red5_kills = players[red[4]]['kills'][0]
-    # red5_deaths = players[red[4]]['deaths'][0]
-    # red5_assists = players[red[4]]['assists'][0]
-    # red5_bodyshots = players[red[4]]['bodyshots'][0]
-    # red5_headshots = players[red[4]]['headshots'][0]
-    # red5_legshots = players[red[4]]['legshots'][0]
-    # red5_damage_made = players[red[4]]['damage_made'][0]
-    # red5_damage_recieved = players[red[4]]['damage_received'][0]
-    # red5_spent_avg = players[red[4]]['spent_avg'][0]
-    # red5_spent_overall = players[red[4]]['spent_overall'][0]
-    #
-    # blue1_name = players[blue[0]]['name'][0]
-    # blue1_tag = players[blue[0]]['tag'][0]
-    # blue1_level = players[blue[0]]['level'][0]
-    # blue1_character = players[blue[0]]['character'][0]
-    # blue1_c_casts = players[blue[0]]['c_casts'][0]
-    # blue1_e_casts = players[blue[0]]['e_cast'][0]
-    # blue1_q_casts = players[blue[0]]['q_casts'][0]
-    # blue1_agent_image = players[blue[0]]['agent_kill_feed'][0]
-    # blue1_score = players[blue[0]]['score'][0]
-    # blue1_kills = players[blue[0]]['kills'][0]
-    # blue1_deaths = players[blue[0]]['deaths'][0]
-    # blue1_assists = players[blue[0]]['assists'][0]
-    # blue1_bodyshots = players[blue[0]]['bodyshots'][0]
-    # blue1_headshots = players[blue[0]]['headshots'][0]
-    # blue1_legshots = players[blue[0]]['legshots'][0]
-    # blue1_damage_made = players[blue[0]]['damage_made'][0]
-    # blue1_damage_recieved = players[blue[0]]['damage_received'][0]
-    # blue1_spent_avg = players[blue[0]]['spent_avg'][0]
-    # blue1_spent_overall = players[blue[0]]['spent_overall'][0]
-    #
-    # blue2_name = players[blue[1]]['name'][0]
-    # blue2_tag = players[blue[1]]['tag'][0]
-    # blue2_level = players[blue[1]]['level'][0]
-    # blue2_character = players[blue[1]]['character'][0]
-    # blue2_c_casts = players[blue[1]]['c_casts'][0]
-    # blue2_e_casts = players[blue[1]]['e_cast'][0]
-    # blue2_q_casts = players[blue[1]]['q_casts'][0]
-    # blue2_agent_image = players[blue[1]]['agent_kill_feed'][0]
-    # blue2_score = players[blue[1]]['score'][0]
-    # blue2_kills = players[blue[1]]['kills'][0]
-    # blue2_deaths = players[blue[1]]['deaths'][0]
-    # blue2_assists = players[blue[1]]['assists'][0]
-    # blue2_bodyshots = players[blue[1]]['bodyshots'][0]
-    # blue2_headshots = players[blue[1]]['headshots'][0]
-    # blue2_legshots = players[blue[1]]['legshots'][0]
-    # blue2_damage_made = players[blue[1]]['damage_made'][0]
-    # blue2_damage_recieved = players[blue[1]]['damage_received'][0]
-    # blue2_spent_avg = players[blue[1]]['spent_avg'][0]
-    # blue2_spent_overall = players[blue[1]]['spent_overall'][0]
-    #
-    # blue3_name = players[blue[2]]['name'][0]
-    # blue3_tag = players[blue[2]]['tag'][0]
-    # blue3_level = players[blue[2]]['level'][0]
-    # blue3_character = players[blue[2]]['character'][0]
-    # blue3_c_casts = players[blue[2]]['c_casts'][0]
-    # blue3_e_casts = players[blue[2]]['e_cast'][0]
-    # blue3_q_casts = players[blue[2]]['q_casts'][0]
-    # blue3_agent_image = players[blue[2]]['agent_kill_feed'][0]
-    # blue3_score = players[blue[2]]['score'][0]
-    # blue3_kills = players[blue[2]]['kills'][0]
-    # blue3_deaths = players[blue[2]]['deaths'][0]
-    # blue3_assists = players[blue[2]]['assists'][0]
-    # blue3_bodyshots = players[blue[2]]['bodyshots'][0]
-    # blue3_headshots = players[blue[2]]['headshots'][0]
-    # blue3_legshots = players[blue[2]]['legshots'][0]
-    # blue3_damage_made = players[blue[2]]['damage_made'][0]
-    # blue3_damage_recieved = players[blue[2]]['damage_received'][0]
-    # blue3_spent_avg = players[blue[2]]['spent_avg'][0]
-    # blue3_spent_overall = players[blue[2]]['spent_overall'][0]
-    #
-    # blue4_name = players[blue[3]]['name'][0]
-    # blue4_tag = players[blue[3]]['tag'][0]
-    # blue4_level = players[blue[3]]['level'][0]
-    # blue4_character = players[blue[3]]['character'][0]
-    # blue4_c_casts = players[blue[3]]['c_casts'][0]
-    # blue4_e_casts = players[blue[3]]['e_cast'][0]
-    # blue4_q_casts = players[blue[3]]['q_casts'][0]
-    # blue4_agent_image = players[blue[3]]['agent_kill_feed'][0]
-    # blue4_score = players[blue[3]]['score'][0]
-    # blue4_kills = players[blue[3]]['kills'][0]
-    # blue4_deaths = players[blue[3]]['deaths'][0]
-    # blue4_assists = players[blue[3]]['assists'][0]
-    # blue4_bodyshots = players[blue[3]]['bodyshots'][0]
-    # blue4_headshots = players[blue[3]]['headshots'][0]
-    # blue4_legshots = players[blue[3]]['legshots'][0]
-    # blue4_damage_made = players[blue[3]]['damage_made'][0]
-    # blue4_damage_recieved = players[blue[3]]['damage_received'][0]
-    # blue4_spent_avg = players[blue[3]]['spent_avg'][0]
-    # blue4_spent_overall = players[blue[3]]['spent_overall'][0]
-    #
-    # blue5_name = players[blue[4]]['name'][0]
-    # blue5_tag = players[blue[4]]['tag'][0]
-    # blue5_level = players[blue[4]]['level'][0]
-    # blue5_character = players[blue[4]]['character'][0]
-    # blue5_c_casts = players[blue[4]]['c_casts'][0]
-    # blue5_e_casts = players[blue[4]]['e_cast'][0]
-    # blue5_q_casts = players[blue[4]]['q_casts'][0]
-    # blue5_agent_image = players[blue[4]]['agent_kill_feed'][0]
-    # blue5_score = players[blue[4]]['score'][0]
-    # blue5_kills = players[blue[4]]['kills'][0]
-    # blue5_deaths = players[blue[4]]['deaths'][0]
-    # blue5_assists = players[blue[4]]['assists'][0]
-    # blue5_bodyshots = players[blue[4]]['bodyshots'][0]
-    # blue5_headshots = players[blue[4]]['headshots'][0]
-    # blue5_legshots = players[blue[4]]['legshots'][0]
-    # blue5_damage_made = players[blue[4]]['damage_made'][0]
-    # blue5_damage_recieved = players[blue[4]]['damage_received'][0]
-    # blue5_spent_avg = players[blue[4]]['spent_avg'][0]
-    # blue5_spent_overall = players[blue[4]]['spent_overall'][0]
+    red1_tab = [
+        [sg.Text("Level: " + str(red_players['red1_level']))],
+        [sg.Text("Character: " + red_players['red1_character'])],
+        [sg.Text("C Casts: " + str(red_players['red1_c_casts']))],
+        [sg.Text("E Casts: " + str(red_players['red1_e_cast']))],
+        [sg.Text("Q Casts: " + str(red_players['red1_q_casts']))],
+        [sg.Text("ACS: " + str(red_players['red1_score']))],
+        [sg.Text("Kills: " + str(red_players['red1_kills']))],
+        [sg.Text("Deaths: " + str(red_players['red1_deaths']))],
+        [sg.Text("Assist: " + str(red_players['red1_assists']))],
+        [sg.Text("H/S %: " + str(((red_players['red1_headshots']) / (red_players['red1_headshots']
+                                                                 + red_players['red1_bodyshots'] + red_players[
+                                                                     'red1_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(red_players['red1_damage_made']))],
+        [sg.Text("Damage Received: " + str(red_players['red1_damage_received']))]
+    ]
 
-    # red1_tab = [
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    #     [sg.Text(blue5_level)],
-    # ]
+    red2_tab = [
+        [sg.Text("Level: " + str(red_players['red2_level']))],
+        [sg.Text("Character: " + str(red_players['red2_character']))],
+        [sg.Text("C Casts: " + str(red_players['red2_c_casts']))],
+        [sg.Text("E Casts: " + str(red_players['red2_e_cast']))],
+        [sg.Text("Q Casts: " + str(red_players['red2_q_casts']))],
+        [sg.Text("ACS: " + str(red_players['red2_score']))],
+        [sg.Text("Kills: " + str(red_players['red2_kills']))],
+        [sg.Text("Deaths: " + str(red_players['red2_deaths']))],
+        [sg.Text("Assist: " + str(red_players['red2_assists']))],
+        [sg.Text("H/S %: " + str(((red_players['red2_headshots']) / (red_players['red2_headshots']
+                                                                 + red_players['red2_bodyshots'] + red_players[
+                                                                     'red2_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(red_players['red2_damage_made']))],
+        [sg.Text("Damage Received: " + str(red_players['red2_damage_received']))]
+    ]
+
+    red3_tab = [
+        [sg.Text("Level: " + str(red_players['red3_level']))],
+        [sg.Text("Character: " + str(red_players['red3_character']))],
+        [sg.Text("C Casts: " + str(red_players['red3_c_casts']))],
+        [sg.Text("E Casts: " + str(red_players['red3_e_cast']))],
+        [sg.Text("Q Casts: " + str(red_players['red3_q_casts']))],
+        [sg.Text("ACS: " + str(red_players['red3_score']))],
+        [sg.Text("Kills: " + str(red_players['red3_kills']))],
+        [sg.Text("Deaths: " + str(red_players['red3_deaths']))],
+        [sg.Text("Assist: " + str(red_players['red3_assists']))],
+        [sg.Text("H/S %: " + str(((red_players['red3_headshots']) / (red_players['red3_headshots']
+                                                                 + red_players['red3_bodyshots'] + red_players[
+                                                                     'red3_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(red_players['red3_damage_made']))],
+        [sg.Text("Damage Received: " + str(red_players['red3_damage_received']))]
+    ]
+
+    red4_tab = [
+        [sg.Text("Level: " + str(red_players['red4_level']))],
+        [sg.Text("Character: " + str(red_players['red4_character']))],
+        [sg.Text("C Casts: " + str(red_players['red4_c_casts']))],
+        [sg.Text("E Casts: " + str(red_players['red4_e_cast']))],
+        [sg.Text("Q Casts: " + str(red_players['red4_q_casts']))],
+        [sg.Text("ACS: " + str(red_players['red4_score']))],
+        [sg.Text("Kills: " + str(red_players['red4_kills']))],
+        [sg.Text("Deaths: " + str(red_players['red4_deaths']))],
+        [sg.Text("Assist: " + str(red_players['red4_assists']))],
+        [sg.Text("H/S %: " + str(((red_players['red4_headshots']) / (red_players['red4_headshots']
+                                                                 + red_players['red4_bodyshots'] + red_players[
+                                                                     'red4_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(red_players['red4_damage_made']))],
+        [sg.Text("Damage Received: " + str(red_players['red4_damage_received']))]
+    ]
+
+    red5_tab = [
+        [sg.Text("Level: " + str(red_players['red5_level']))],
+        [sg.Text("Character: " + str(red_players['red5_character']))],
+        [sg.Text("C Casts: " + str(red_players['red5_c_casts']))],
+        [sg.Text("E Casts: " + str(red_players['red5_e_cast']))],
+        [sg.Text("Q Casts: " + str(red_players['red5_q_casts']))],
+        [sg.Text("ACS: " + str(red_players['red5_score']))],
+        [sg.Text("Kills: " + str(red_players['red5_kills']))],
+        [sg.Text("Deaths: " + str(red_players['red5_deaths']))],
+        [sg.Text("Assist: " + str(red_players['red5_assists']))],
+        [sg.Text("H/S %: " + str(((red_players['red5_headshots']) / (red_players['red5_headshots']
+                                                                 + red_players['red5_bodyshots'] + red_players[
+                                                                     'red5_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(red_players['red5_damage_made']))],
+        [sg.Text("Damage Received: " + str(red_players['red5_damage_received']))]
+    ]
+
+    blue1_tab = [
+        [sg.Text("Level: " + str(blue_players['blue1_level']))],
+        [sg.Text("Character: " + str(blue_players['blue1_character']))],
+        [sg.Text("C Casts: " + str(blue_players['blue1_c_casts']))],
+        [sg.Text("E Casts: " + str(blue_players['blue1_e_cast']))],
+        [sg.Text("Q Casts: " + str(blue_players['blue1_q_casts']))],
+        [sg.Text("ACS: " + str(blue_players['blue1_score']))],
+        [sg.Text("Kills: " + str(blue_players['blue1_kills']))],
+        [sg.Text("Deaths: " + str(blue_players['blue1_deaths']))],
+        [sg.Text("Assist: " + str(blue_players['blue1_assists']))],
+        [sg.Text("H/S %: " + str(((blue_players['blue1_headshots']) / (blue_players['blue1_headshots']
+                                                                   + blue_players['blue1_bodyshots'] + blue_players[
+                                                                       'blue1_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(blue_players['blue1_damage_made']))],
+        [sg.Text("Damage Received: " + str(blue_players['blue1_damage_received']))]
+    ]
+
+    blue2_tab = [
+        [sg.Text("Level: " + str(blue_players['blue2_level']))],
+        [sg.Text("Character: " + str(blue_players['blue2_character']))],
+        [sg.Text("C Casts: " + str(blue_players['blue2_c_casts']))],
+        [sg.Text("E Casts: " + str(blue_players['blue2_e_cast']))],
+        [sg.Text("Q Casts: " + str(blue_players['blue2_q_casts']))],
+        [sg.Text("ACS: " + str(blue_players['blue2_score']))],
+        [sg.Text("Kills: " + str(blue_players['blue2_kills']))],
+        [sg.Text("Deaths: " + str(blue_players['blue2_deaths']))],
+        [sg.Text("Assist: " + str(blue_players['blue2_assists']))],
+        [sg.Text("H/S %: " + str(((blue_players['blue2_headshots']) / (blue_players['blue2_headshots']
+                                                                   + blue_players['blue2_bodyshots'] + blue_players[
+                                                                       'blue2_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(blue_players['blue2_damage_made']))],
+        [sg.Text("Damage Received: " + str(blue_players['blue2_damage_received']))]
+    ]
+
+    blue3_tab = [
+        [sg.Text("Level: " + str(blue_players['blue3_level']))],
+        [sg.Text("Character: " + str(blue_players['blue3_character']))],
+        [sg.Text("C Casts: " + str(blue_players['blue3_c_casts']))],
+        [sg.Text("E Casts: " + str(blue_players['blue3_e_cast']))],
+        [sg.Text("Q Casts: " + str(blue_players['blue3_q_casts']))],
+        [sg.Text("ACS: " + str(blue_players['blue3_score']))],
+        [sg.Text("Kills: " + str(blue_players['blue3_kills']))],
+        [sg.Text("Deaths: " + str(blue_players['blue3_deaths']))],
+        [sg.Text("Assist: " + str(blue_players['blue3_assists']))],
+        [sg.Text("H/S %: " + str(((blue_players['blue3_headshots']) / (blue_players['blue3_headshots']
+                                                                   + blue_players['blue3_bodyshots'] + blue_players[
+                                                                       'blue3_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(blue_players['blue3_damage_made']))],
+        [sg.Text("Damage Received: " + str(blue_players['blue3_damage_received']))]
+    ]
+
+    blue4_tab = [
+        [sg.Text("Level: " + str(blue_players['blue4_level']))],
+        [sg.Text("Character: " + str(blue_players['blue4_character']))],
+        [sg.Text("C Casts: " + str(blue_players['blue4_c_casts']))],
+        [sg.Text("E Casts: " + str(blue_players['blue4_e_cast']))],
+        [sg.Text("Q Casts: " + str(blue_players['blue4_q_casts']))],
+        [sg.Text("ACS: " + str(blue_players['blue4_score']))],
+        [sg.Text("Kills: " + str(blue_players['blue4_kills']))],
+        [sg.Text("Deaths: " + str(blue_players['blue4_deaths']))],
+        [sg.Text("Assist: " + str(blue_players['blue4_assists']))],
+        [sg.Text("H/S %: " + str(((blue_players['blue4_headshots']) / (blue_players['blue4_headshots']
+                                                                   + blue_players['blue4_bodyshots'] + blue_players[
+                                                                       'blue4_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(blue_players['blue4_damage_made']))],
+        [sg.Text("Damage Received: " + str(blue_players['blue4_damage_received']))]
+    ]
+
+    blue5_tab = [
+        [sg.Text("Level: " + str(blue_players['blue5_level']))],
+        [sg.Text("Character: " + str(blue_players['blue5_character']))],
+        [sg.Text("C Casts: " + str(blue_players['blue5_c_casts']))],
+        [sg.Text("E Casts: " + str(blue_players['blue5_e_cast']))],
+        [sg.Text("Q Casts: " + str(blue_players['blue5_q_casts']))],
+        [sg.Text("ACS: " + str(blue_players['blue5_score']))],
+        [sg.Text("Kills: " + str(blue_players['blue5_kills']))],
+        [sg.Text("Deaths: " + str(blue_players['blue5_deaths']))],
+        [sg.Text("Assist: " + str(blue_players['blue5_assists']))],
+        [sg.Text("H/S %: " + str(((blue_players['blue5_headshots']) / (blue_players['blue5_headshots']
+                                                                   + blue_players['blue5_bodyshots'] + blue_players[
+                                                                       'blue5_legshots'])) * 100))],
+        [sg.Text("Damage Dealt: " + str(blue_players['blue5_damage_made']))],
+        [sg.Text("Damage Received: " + str(blue_players['blue5_damage_received']))]
+    ]
+
+    l_layout = [
+        [sg.TabGroup([[sg.Tab((red_players['red1_name'] + " " + red_players['red1_tag']), red1_tab),
+                       sg.Tab((red_players['red2_name'] + " " + red_players['red2_tag']), red2_tab),
+                       sg.Tab((red_players['red3_name'] + " " + red_players['red3_tag']), red3_tab),
+                       sg.Tab((red_players['red4_name'] + " " + red_players['red4_tag']), red4_tab),
+                       sg.Tab((red_players['red5_name'] + " " + red_players['red5_tag']), red5_tab)
+
+
+                       ]])]
+
+    ]
 
     layout = [
-        [sg.Text("sadf")]
+        [sg.Column(l_layout, justification="l")]
     ]
 
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')

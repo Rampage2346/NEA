@@ -16,7 +16,6 @@ tab1_layout = [[sg.Text('This is inside tab 1', background_color='darkslateblue'
 tab2_layout = [[sg.Text('This is inside tab 2', background_color='tan1')],
                [sg.Input(key='-in2-')]]
 
-
 tab3_layout = [[sg.Text('This is inside tab 3')],
                [sg.Input(key='-in2-')]]
 
