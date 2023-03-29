@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="recent match overview implemented">
-      <change afterPath="$PROJECT_DIR$/swap.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tabs.py" afterDir="false" />
+    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="recent match overview finished">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mainGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainGUI.py" afterDir="false" />
     </list>
@@ -343,7 +341,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679952978666</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="recent match overview finished">
+      <created>1680035318569</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1680035318569</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -390,7 +395,8 @@
     <MESSAGE value="options menu WIP" />
     <MESSAGE value="Leaderboard finished" />
     <MESSAGE value="recent match overview implemented" />
-    <option name="LAST_COMMIT_MESSAGE" value="recent match overview implemented" />
+    <MESSAGE value="recent match overview finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="recent match overview finished" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
