@@ -9,6 +9,7 @@ characters = [
 
 
 def sha1(data):
+    """Hashing algorithm full explained in my design documentation."""
     bytes = ""
 
     h0 = 0x67452301
@@ -78,14 +79,16 @@ def sha1(data):
 
 
 def checkPass(inpuser, inppass):
+    """This function checks if the hashed username and password exists within the creds.csv.
+    Takes username and password as parameters"""
     accept = False
+    # reads contents of csv file
     creds = pd.read_csv("creds.csv")
-
+    # hashes username and password
     is_correct_user = (creds['username'] == sha1(inpuser))
-    # print(is_correct_user)
     is_correct_pass = (creds['password'] == sha1(inppass))
-    # print(is_correct_pass)
 
+    # iterates through all usernames in csv file. If present user becomes true.
     for i in range(0, len(creds)):
         if is_correct_user[i]:
             user = True
@@ -93,6 +96,7 @@ def checkPass(inpuser, inppass):
     else:
         user = False
 
+    # iterates through all passwords in csv file. If present user becomes true.
     for i in range(0, len(creds)):
         if is_correct_pass[i]:
             passw = True
@@ -100,6 +104,7 @@ def checkPass(inpuser, inppass):
     else:
         passw = False
 
+    # if both username and password exists in the csv accept is returned as true and the user is logged in
     if user == True and passw == True:
         accept = True
 
@@ -107,96 +112,12 @@ def checkPass(inpuser, inppass):
 
 
 def addUser(userN, userP):
+    """This function add a new user to the csv file"""
+    # creates a dictionary containing the hashed new username and password
     data = {
         'username': [sha1(userN)],
         'password': [sha1(userP)],
     }
+    # converts dictionary into a data frame which can be added to the csv
     df = pd.DataFrame(data)
     df.to_csv('creds.csv', mode='a', index=False, header=False)
-    print("Data appended successfully.")
-
-
-def new_user_append(inpuser, inppass):
-    numbers = [
-        '1', '2', '3', '4', '5',
-        '6', '7', '8', '9', '0'
-    ]
-    usern = [*inpuser]
-    passw = [*inppass]
-
-    for i in range(0, len(usern)):
-        if usern[i] in numbers:
-            tempusern = chr((int((usern[i]))) + 64)
-            print(tempusern)
-            usern[i] = str(tempusern)
-
-    for i in range(0, len(passw)):
-        if passw[i] in numbers:
-            temppassw = chr((int((passw[i]))) + 64)
-
-            passw[i] = str(temppassw)
-
-    print(usern)
-    print(passw)
-    inpuser = "".join(usern)
-    inppass = "".join(passw)
-    print(inpuser, inppass)
-    print(type(inpuser), type(inppass))
-
-    addUser(inpuser, inppass)
-
-
-def login_cred_check(inpuser, inppass):
-    numbers = [
-        '1', '2', '3', '4', '5',
-        '6', '7', '8', '9', '0'
-    ]
-    usern = [*inpuser]
-    passw = [*inppass]
-
-    for i in range(0, len(usern)):
-        if usern[i] in numbers:
-            tempusern = chr((int((usern[i]))) + 64)
-            print(tempusern)
-            usern[i] = str(tempusern)
-
-    for i in range(0, len(passw)):
-        if passw[i] in numbers:
-            temppassw = chr((int((passw[i]))) + 64)
-
-            passw[i] = str(temppassw)
-
-    print(usern)
-    print(passw)
-    inpuser = "".join(usern)
-    inppass = "".join(passw)
-    print(inpuser, inppass)
-    print(type(inpuser), type(inppass))
-
-    check = checkPass(inpuser, inppass)
-    return check
-
-
-def mainLogin():
-    add = input("Login or Add New User: L/A\n\t")
-
-    if add == "L":
-        logged_in = login_no_hash()
-        print(logged_in)
-    elif add == "A":
-        newuser = input("Enter your new username\n\t")
-        newpass = input("Enter your new password\n\t")
-        addUser(newuser, newpass)
-
-    print("-----")
-    df = pd.read_csv('creds.csv')
-    print(df.to_string())
-
-
-def login_no_hash():
-    inpuser = input("Enter your username\n\t")
-    inppass = input("Enter you password\n\t")
-    check = checkPass(inpuser, inppass)
-    return check
-
-# mainLogin()

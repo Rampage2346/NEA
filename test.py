@@ -75,3 +75,24 @@
 #     rr.append(mmr3)
 #
 #     format_rr(rr)
+#
+# def loading():
+#     sg.theme('DarkBlue')
+#
+#     load = [
+#         [sg.Text('Fetching data...')]
+#     ]
+#
+#     layout = [
+#         [sg.Column(load, justification='c')],
+#         [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progressbar', style="clam")]
+#     ]
+#
+#     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+#     progress_bar = window['progressbar']
+#     for i in range(1000):
+#         event, values = window.read(timeout=10)
+#         if event == sg.WIN_CLOSED:
+#             break
+#         progress_bar.UpdateBar(i + 1)
+#     window.close()

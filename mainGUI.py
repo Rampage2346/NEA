@@ -1,73 +1,66 @@
+# importing the GUI
 import PySimpleGUI as sg
+# importing to display dictionaries better
 import pprint
 import requests
+# using pillow library to request and display images
 from PIL import Image
 import io
-from login import login_cred_check, new_user_append
+# importing algorithms from other python files in the program
+from login import checkPass, addUser
 from MainAPICall import allPlayerData, format_rr, getLeaderboard, matchID, matchHistory
-
-# import time
-
-# from options import recent_match_summary_option, leader_option, match_breakdown_option
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
 
-def loading():
-    sg.theme('DarkBlue')
-
-    load = [
-        [sg.Text('Fetching data...')]
-    ]
-
-    layout = [
-        [sg.Column(load, justification='c')],
-        [sg.ProgressBar(1000, orientation='h', size=(20, 20), key='progressbar', style="clam")]
-    ]
-
-    window = sg.Window("MetaTrak", layout, icon='valorant.ico')
-    progress_bar = window['progressbar']
-    for i in range(1000):
-        event, values = window.read(timeout=10)
-        if event == sg.WIN_CLOSED:
-            break
-        progress_bar.UpdateBar(i + 1)
-    window.close()
-
-
 def popup(message):
+    """This function is used to create one time windows that display the text given in the parameter message"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
+    # defines column
     column_to_be_centered = [
         [sg.Text(message)],
         [sg.Push(), sg.Button('OK')]
     ]
 
+    # uses column and gives a central justification attribute. Also uses VPush and Push to centre text.
     layout = [
         [sg.VPush()],
         [sg.Push(), sg.Column(column_to_be_centered, element_justification='c'), sg.Push()],
         [sg.VPush()]
     ]
-
+    # defines the window and gives it a title and an icon
     sg.Window('MetaTrak', layout, modal=True, icon='valorant.ico').read(close=True)
 
 
 def login_or_adduser():
+    """This function gives the user the option to either log in with an existing account or create a new one.
+    It returns the event that the user selected"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
+    # defines layout using a series of text boxes and buttons
     layout = [
         [sg.Canvas()],
         [sg.Canvas(), sg.Text("Please Choose an Option:"), sg.Canvas()],
         [sg.Canvas()],
         [sg.Canvas(), sg.Button("I already have an account"), sg.Button("I am a new user"), sg.Canvas()]
     ]
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event from the window
     event = window.read()
+    # automatically closes the window once an event has been triggered
     window.close()
 
     return event
 
 
 def login_window():
+    """This function asks the user to enter their username and password. Once the submit event is triggered the values 
+    are read and return as event and values"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
+    # defines layout using a series of text boxes, userinput text and buttons
     layout = [
         [sg.Text('Enter Your Username')],
         [sg.InputText()],
@@ -75,30 +68,41 @@ def login_window():
         [sg.InputText()],
         [sg.Button('Submit'), sg.Button('Cancel')]
     ]
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event and the values provided from the window
     event, values = window.read()
+    # automatically closes the window once an event has been triggered
     window.close()
 
     return event, values
 
 
 def new_user_window():
+    """This function asks the user to create new login details then returns them"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
+    # defines layout using a series of text boxes, userinput text and buttons
     layout = [
-        [sg.Text('Enter Your Username:')],
+        [sg.Text('Enter Your New Username:')],
         [sg.InputText()],
         [sg.Text('Enter Your New Password:')],
         [sg.InputText()],
         [sg.Button('Submit'), sg.Button('Cancel')]
     ]
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event and the values provided from the window
     event, values = window.read()
+    # automatically closes the window once an event has been triggered
     window.close()
 
     return event, values
 
 
 def api_login_window():
+    """This function prompts the user to enter their RIOT name and tag then returns the values provided"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
     layout = [
         [sg.Text('Enter Your Riot ID:')],
@@ -107,46 +111,49 @@ def api_login_window():
         [sg.InputText()],
         [sg.Button('Submit'), sg.Button('Cancel')]
     ]
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event and the values provided from the window
     event, values = window.read()
+    # automatically closes the window once an event has been triggered
     window.close()
 
     return event, values
 
 
 def main_login():
+    """This subroutine explains the basics of the program and then calls the login_or_adduser() function and uses
+    the result to either call the login window or the create existing user window"""
     popup("Welcome To MetaTrak, a python application responsible for your imminent improvement at Valorant! \nOn the "
           "next screen you will need to login or create a new account.")
-
+    # calls function and saves the users choice
     login_choice = login_or_adduser()
-    # print(login_choice)
 
+    # if the user has an account a window is called and the user enters a username and password until it is correct
     if login_choice[0] == "I already have an account":
         check = False
         login_inp_array = login_window()
         if login_inp_array[0] == 'Cancel' or login_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
-        # print(login_inp_array)
-        check = login_cred_check(login_inp_array[1][0], login_inp_array[1][1])
-        # print(check)
+        check = checkPass(login_inp_array[1][0], login_inp_array[1][1])
         while check is False:
             popup("Incorrect Username or Password!\nPlease try again.")
             login_inp_array = login_window()
             if login_inp_array[0] == 'Cancel' or login_inp_array[0] == sg.WINDOW_CLOSED:
                 exit()
-            # print(login_inp_array)
-            check = login_cred_check(login_inp_array[1][0], login_inp_array[1][1])
-            # print(check)
+            check = checkPass(login_inp_array[1][0], login_inp_array[1][1])
 
+    # if the user does not have an account a window is called where they can enter their new login
     elif login_choice[0] == "I am a new user":
         new_user_inp_array = new_user_window()
         if new_user_inp_array[0] == 'Cancel' or new_user_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
-        # print(new_user_inp_array)
-        new_user_append(new_user_inp_array[1][0], new_user_inp_array[1][1])
+        addUser(new_user_inp_array[1][0], new_user_inp_array[1][1])
 
 
 def api_login():
+    """This function describes the way in which the user should enter their account details.
+    It then calls an input window and returns the users details"""
     popup("You have now logged in or created your new account. Now you will need to provide the Valorant account \n"
           "that you would like to fetch the stats for. This means your IGN and your tagline, the string after the #.\n")
     api_inp_array = api_login_window()
@@ -154,8 +161,13 @@ def api_login():
 
 
 def main_menu():
+    """This function is the main window that is opened after logging in with you RIOT account details"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
 
+    # this block of code is repeated multiple times throughout this program
+    # this uses the requests module to fetch the image from the URL and then using the io library
+    # it formats it into something that PySimpleGUI can display
     card_bytes = requests.get(account_data["cardW"][0])
     card_image = Image.open(io.BytesIO(card_bytes.content))
     card_png = io.BytesIO()
@@ -177,10 +189,7 @@ def main_menu():
     card = sg.Image(data=card_display)
     rank = sg.Image(data=rank_display)
 
-    rank_curr = [
-        [sg.Text(current_rank)]
-    ]
-
+    # this ProgressBar element is used as a static bar to display the players ranked rating out of 100
     progress_bar = [
         [sg.ProgressBar(max_value=1000, orientation='h', s=(10, 20), key="progressbar")]
     ]
@@ -194,23 +203,25 @@ def main_menu():
         [sg.Column(current, element_justification='c')]
     ]
 
-    layout_l = [
+    layout = [
         [sg.Text("Name: " + name), sg.Text("Level: " + account_level), sg.Text(region)],
         [sg.Text("Current Rank:")],
         [sg.Column([[rank]], justification='c')],
         [sg.Text(current_rank, justification='c')],
         [sg.Text(f"{ranking_in_tier} "), sg.Column(progress_bar), sg.Text("100")]
     ]
-
+    # defines layout with horizontal separators to divide the window
     layout_main = [
         [card],
         [sg.HorizontalSeparator()],
-        [sg.Column(layout_l, element_justification='c', justification='c')],
+        [sg.Column(layout, element_justification='c', justification='c')],
         [sg.HorizontalSeparator()]
     ]
 
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout_main, icon='valorant.ico')
 
+    # uses the key of the progress bar and a for loop to increase the value up to the players current rank
     progress_bar = window['progressbar']
     for i in range(1000):
         event, values = window.read(timeout=1000)
@@ -224,6 +235,8 @@ def main_menu():
 
 
 def all_data(name, id):
+    """This function is reponsible for calling all functions that request data from the API with
+    RIOT name and tag as parameters"""
     global all_dicts, account_data, mmr_data, mmr_history, region_version, match_id, last_match_data
     all_dicts = allPlayerData(name, id)
     account_data = all_dicts[0]
@@ -236,6 +249,9 @@ def all_data(name, id):
 
 
 def option_menu():
+    """This function creates a window that asks the user which of the 3 main function they would like to run.
+    Returns the event"""
+    # defines the theme of the window
     sg.theme('DarkBlue')
 
     title = [
@@ -249,13 +265,15 @@ def option_menu():
         [sg.Canvas()],
         [sg.Button('Specific Match Breakdown')]
     ]
-
+    # defines the layout using columns to centre the title and buttons
     layout = [
         [sg.Column(title, element_justification='c', justification='c')],
         [sg.Column(buttons, justification='c')]
     ]
     window = sg.Window("MetaTrak", layout, icon='valorant.ico', size=(225, 175))
+    # this reads the event and the values provided from the window
     event, values = window.read()
+    # automatically closes the window once an event has been triggered
     window.close()
 
     return event, values
@@ -369,7 +387,9 @@ def recent_match_summary_option(all_dicts, playername):
         [sg.Text("Kills: " + str(kills3)), sg.Text("Deaths: " + str(deaths3)), sg.Text("Assists: " + str(assists3))]
     ]
 
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event and the values provided from the window
     event, values = window.read()
     window.close()
     return event, values
@@ -398,6 +418,7 @@ def define_players(player: int, red_players: dict, blue_players: dict, players):
 
 
 def match_breakdown_option(all_dicts):
+    # defines the theme of the window
     sg.theme('DarkBlue')
 
     match_id = all_dicts[0][4][1]['match_id'][0]
@@ -418,22 +439,22 @@ def match_breakdown_option(all_dicts):
         elif player_team == "Blue":
             blue.append(i)
 
-    print(red)
-    print("-----------")
-    print(blue)
-    print("-----------")
+    # print(red)
+    # print("-----------")
+    # print(blue)
+    # print("-----------")
 
     # asdasd
     red_players = {}
     blue_players = {}
     for player in range(1, 11):
         red_players, blue_players = define_players(player, red_players, blue_players, players)
-    pp.pprint(red_players)
-    pp.pprint(blue_players)
+    # pp.pprint(red_players)
+    # pp.pprint(blue_players)
 
     red1_tab = [
         [sg.Text("Level: " + str(red_players['red1_level']))],
-        [sg.Text("Character: " + red_players['red1_character'])],
+        [sg.Text("Agent: " + red_players['red1_character'])],
         [sg.Text("C Casts: " + str(red_players['red1_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red1_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red1_q_casts']))],
@@ -441,16 +462,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(red_players['red1_kills']))],
         [sg.Text("Deaths: " + str(red_players['red1_deaths']))],
         [sg.Text("Assist: " + str(red_players['red1_assists']))],
-        [sg.Text("H/S %: " + str(((red_players['red1_headshots']) / (red_players['red1_headshots']
+        [sg.Text("H/S %: " + str(round(((red_players['red1_headshots']) / (red_players['red1_headshots']
                                                                  + red_players['red1_bodyshots'] + red_players[
-                                                                     'red1_legshots'])) * 100))],
+                                                                     'red1_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red1_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red1_damage_received']))]
     ]
 
     red2_tab = [
         [sg.Text("Level: " + str(red_players['red2_level']))],
-        [sg.Text("Character: " + str(red_players['red2_character']))],
+        [sg.Text("Agent: " + str(red_players['red2_character']))],
         [sg.Text("C Casts: " + str(red_players['red2_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red2_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red2_q_casts']))],
@@ -458,16 +479,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(red_players['red2_kills']))],
         [sg.Text("Deaths: " + str(red_players['red2_deaths']))],
         [sg.Text("Assist: " + str(red_players['red2_assists']))],
-        [sg.Text("H/S %: " + str(((red_players['red2_headshots']) / (red_players['red2_headshots']
+        [sg.Text("H/S %: " + str(round(((red_players['red2_headshots']) / (red_players['red2_headshots']
                                                                  + red_players['red2_bodyshots'] + red_players[
-                                                                     'red2_legshots'])) * 100))],
+                                                                     'red2_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red2_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red2_damage_received']))]
     ]
 
     red3_tab = [
         [sg.Text("Level: " + str(red_players['red3_level']))],
-        [sg.Text("Character: " + str(red_players['red3_character']))],
+        [sg.Text("Agent: " + str(red_players['red3_character']))],
         [sg.Text("C Casts: " + str(red_players['red3_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red3_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red3_q_casts']))],
@@ -475,16 +496,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(red_players['red3_kills']))],
         [sg.Text("Deaths: " + str(red_players['red3_deaths']))],
         [sg.Text("Assist: " + str(red_players['red3_assists']))],
-        [sg.Text("H/S %: " + str(((red_players['red3_headshots']) / (red_players['red3_headshots']
+        [sg.Text("H/S %: " + str(round(((red_players['red3_headshots']) / (red_players['red3_headshots']
                                                                  + red_players['red3_bodyshots'] + red_players[
-                                                                     'red3_legshots'])) * 100))],
+                                                                     'red3_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red3_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red3_damage_received']))]
     ]
 
     red4_tab = [
         [sg.Text("Level: " + str(red_players['red4_level']))],
-        [sg.Text("Character: " + str(red_players['red4_character']))],
+        [sg.Text("Agent: " + str(red_players['red4_character']))],
         [sg.Text("C Casts: " + str(red_players['red4_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red4_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red4_q_casts']))],
@@ -492,16 +513,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(red_players['red4_kills']))],
         [sg.Text("Deaths: " + str(red_players['red4_deaths']))],
         [sg.Text("Assist: " + str(red_players['red4_assists']))],
-        [sg.Text("H/S %: " + str(((red_players['red4_headshots']) / (red_players['red4_headshots']
+        [sg.Text("H/S %: " + str(round(((red_players['red4_headshots']) / (red_players['red4_headshots']
                                                                  + red_players['red4_bodyshots'] + red_players[
-                                                                     'red4_legshots'])) * 100))],
+                                                                     'red4_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red4_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red4_damage_received']))]
     ]
 
     red5_tab = [
         [sg.Text("Level: " + str(red_players['red5_level']))],
-        [sg.Text("Character: " + str(red_players['red5_character']))],
+        [sg.Text("Agent: " + str(red_players['red5_character']))],
         [sg.Text("C Casts: " + str(red_players['red5_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red5_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red5_q_casts']))],
@@ -509,16 +530,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(red_players['red5_kills']))],
         [sg.Text("Deaths: " + str(red_players['red5_deaths']))],
         [sg.Text("Assist: " + str(red_players['red5_assists']))],
-        [sg.Text("H/S %: " + str(((red_players['red5_headshots']) / (red_players['red5_headshots']
+        [sg.Text("H/S %: " + str(round(((red_players['red5_headshots']) / (red_players['red5_headshots']
                                                                  + red_players['red5_bodyshots'] + red_players[
-                                                                     'red5_legshots'])) * 100))],
+                                                                     'red5_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red5_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red5_damage_received']))]
     ]
 
     blue1_tab = [
         [sg.Text("Level: " + str(blue_players['blue1_level']))],
-        [sg.Text("Character: " + str(blue_players['blue1_character']))],
+        [sg.Text("Agent: " + str(blue_players['blue1_character']))],
         [sg.Text("C Casts: " + str(blue_players['blue1_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue1_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue1_q_casts']))],
@@ -526,16 +547,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(blue_players['blue1_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue1_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue1_assists']))],
-        [sg.Text("H/S %: " + str(((blue_players['blue1_headshots']) / (blue_players['blue1_headshots']
-                                                                   + blue_players['blue1_bodyshots'] + blue_players[
-                                                                       'blue1_legshots'])) * 100))],
+        [sg.Text("H/S %: " + str(round(((blue_players['blue1_headshots']) / (blue_players['blue1_headshots']
+                                                                 + blue_players['blue1_bodyshots'] + blue_players[
+                                                                     'blue1_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue1_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue1_damage_received']))]
     ]
 
     blue2_tab = [
         [sg.Text("Level: " + str(blue_players['blue2_level']))],
-        [sg.Text("Character: " + str(blue_players['blue2_character']))],
+        [sg.Text("Agent: " + str(blue_players['blue2_character']))],
         [sg.Text("C Casts: " + str(blue_players['blue2_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue2_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue2_q_casts']))],
@@ -543,16 +564,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(blue_players['blue2_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue2_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue2_assists']))],
-        [sg.Text("H/S %: " + str(((blue_players['blue2_headshots']) / (blue_players['blue2_headshots']
-                                                                   + blue_players['blue2_bodyshots'] + blue_players[
-                                                                       'blue2_legshots'])) * 100))],
+        [sg.Text("H/S %: " + str(round(((blue_players['blue2_headshots']) / (blue_players['blue2_headshots']
+                                                                 + blue_players['blue2_bodyshots'] + blue_players[
+                                                                     'blue2_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue2_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue2_damage_received']))]
     ]
 
     blue3_tab = [
         [sg.Text("Level: " + str(blue_players['blue3_level']))],
-        [sg.Text("Character: " + str(blue_players['blue3_character']))],
+        [sg.Text("Agent: " + str(blue_players['blue3_character']))],
         [sg.Text("C Casts: " + str(blue_players['blue3_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue3_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue3_q_casts']))],
@@ -560,16 +581,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(blue_players['blue3_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue3_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue3_assists']))],
-        [sg.Text("H/S %: " + str(((blue_players['blue3_headshots']) / (blue_players['blue3_headshots']
-                                                                   + blue_players['blue3_bodyshots'] + blue_players[
-                                                                       'blue3_legshots'])) * 100))],
+        [sg.Text("H/S %: " + str(round(((blue_players['blue3_headshots']) / (blue_players['blue3_headshots']
+                                                                 + blue_players['blue3_bodyshots'] + blue_players[
+                                                                     'blue3_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue3_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue3_damage_received']))]
     ]
 
     blue4_tab = [
         [sg.Text("Level: " + str(blue_players['blue4_level']))],
-        [sg.Text("Character: " + str(blue_players['blue4_character']))],
+        [sg.Text("Agent: " + str(blue_players['blue4_character']))],
         [sg.Text("C Casts: " + str(blue_players['blue4_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue4_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue4_q_casts']))],
@@ -577,16 +598,16 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(blue_players['blue4_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue4_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue4_assists']))],
-        [sg.Text("H/S %: " + str(((blue_players['blue4_headshots']) / (blue_players['blue4_headshots']
-                                                                   + blue_players['blue4_bodyshots'] + blue_players[
-                                                                       'blue4_legshots'])) * 100))],
+        [sg.Text("H/S %: " + str(round(((blue_players['blue4_headshots']) / (blue_players['blue4_headshots']
+                                                                 + blue_players['blue4_bodyshots'] + blue_players[
+                                                                     'blue4_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue4_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue4_damage_received']))]
     ]
 
     blue5_tab = [
         [sg.Text("Level: " + str(blue_players['blue5_level']))],
-        [sg.Text("Character: " + str(blue_players['blue5_character']))],
+        [sg.Text("Agent: " + str(blue_players['blue5_character']))],
         [sg.Text("C Casts: " + str(blue_players['blue5_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue5_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue5_q_casts']))],
@@ -594,30 +615,43 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Kills: " + str(blue_players['blue5_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue5_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue5_assists']))],
-        [sg.Text("H/S %: " + str(((blue_players['blue5_headshots']) / (blue_players['blue5_headshots']
-                                                                   + blue_players['blue5_bodyshots'] + blue_players[
-                                                                       'blue5_legshots'])) * 100))],
+        [sg.Text("H/S %: " + str(round(((blue_players['blue5_headshots']) / (blue_players['blue5_headshots']
+                                                                 + blue_players['blue5_bodyshots'] + blue_players[
+                                                                     'blue5_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue5_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue5_damage_received']))]
     ]
 
-    l_layout = [[sg.TabGroup([[sg.Tab((red_players['red1_name'] + " " + red_players['red1_tag']), red1_tab),
-                               sg.Tab((red_players['red2_name'] + " " + red_players['red2_tag']), red2_tab),
-                               sg.Tab((red_players['red3_name'] + " " + red_players['red3_tag']), red3_tab),
-                               sg.Tab((red_players['red4_name'] + " " + red_players['red4_tag']), red4_tab),
-                               sg.Tab((red_players['red5_name'] + " " + red_players['red5_tag']), red5_tab)]],
+    l_layout = [[sg.TabGroup([[sg.Tab((red_players['red1_name'] + " #" + red_players['red1_tag']),
+                                      red1_tab, title_color='white'),
+                               sg.Tab((red_players['red2_name'] + " #" + red_players['red2_tag']),
+                                      red2_tab, title_color='white'),
+                               sg.Tab((red_players['red3_name'] + " #" + red_players['red3_tag']),
+                                      red3_tab, title_color='white'),
+                               sg.Tab((red_players['red4_name'] + " #" + red_players['red4_tag']),
+                                      red4_tab, title_color='white'),
+                               sg.Tab((red_players['red5_name'] + " #" + red_players['red5_tag']),
+                                      red5_tab, title_color='white')]],
                              title_color='red',
-                             selected_title_color='green', tab_location='topleft'
+                             selected_title_color='white',
+                             tab_location='lefttop'
                              )]
     ]
 
-    r_layout = [[sg.TabGroup([[sg.Tab((blue_players['blue1_name'] + " " + blue_players['blue1_tag']), blue1_tab),
-                               sg.Tab((blue_players['blue2_name'] + " " + blue_players['blue2_tag']), blue2_tab),
-                               sg.Tab((blue_players['blue3_name'] + " " + blue_players['blue3_tag']), blue3_tab),
-                               sg.Tab((blue_players['blue4_name'] + " " + blue_players['blue4_tag']), blue4_tab),
-                               sg.Tab((blue_players['blue5_name'] + " " + blue_players['blue5_tag']), blue5_tab)]],
+    r_layout = [[sg.TabGroup([[sg.Tab((blue_players['blue1_name'] + " #" + blue_players['blue1_tag']),
+                                      blue1_tab, title_color='white'),
+                               sg.Tab((blue_players['blue2_name'] + " #" + blue_players['blue2_tag']),
+                                      blue2_tab, title_color='white'),
+                               sg.Tab((blue_players['blue3_name'] + " #" + blue_players['blue3_tag']),
+                                      blue3_tab, title_color='white'),
+                               sg.Tab((blue_players['blue4_name'] + " #" + blue_players['blue4_tag']),
+                                      blue4_tab, title_color='white'),
+                               sg.Tab((blue_players['blue5_name'] + " #" + blue_players['blue5_tag']),
+                                      blue5_tab, title_color='white')]],
                              title_color='blue',
-                             selected_title_color='green', tab_location='topright'
+                             selected_title_color='white',
+                             tab_location='righttop',
+
                              )]
                 ]
 
@@ -625,7 +659,9 @@ def match_breakdown_option(all_dicts):
         [sg.Column(l_layout, justification="l"), sg.Column(r_layout, justification="r")]
     ]
 
+    # defines the window and gives it a title and an icon
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
+    # this reads the event and the values provided from the window
     event, values = window.read()
     window.close()
     return event, values
@@ -641,6 +677,7 @@ def choice(option_choice, all_dicts, playername):
 
 
 def leaderboard_display(dict):
+    # defines the theme of the window
     sg.theme('DarkBlue')
     page = 1
 
@@ -697,6 +734,7 @@ def leaderboard_display(dict):
     window = sg.Window("MetaTrak", layout, icon='valorant.ico', grab_anywhere=False, size=(300, 300))
     # Event Loop
     while True:
+        # this reads the event and the values provided from the window
         event, values = window.read()
         if event == sg.WIN_CLOSED:
             break
@@ -725,7 +763,7 @@ def leaderboard_display(dict):
 
 
 if __name__ == '__main__':
-    # main_login()
+    main_login()
 
     details = api_login()
     all_dicts = all_data(details[0], details[1])
