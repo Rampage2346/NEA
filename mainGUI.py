@@ -601,20 +601,28 @@ def match_breakdown_option(all_dicts):
         [sg.Text("Damage Received: " + str(blue_players['blue5_damage_received']))]
     ]
 
-    l_layout = [
-        [sg.TabGroup([[sg.Tab((red_players['red1_name'] + " " + red_players['red1_tag']), red1_tab),
-                       sg.Tab((red_players['red2_name'] + " " + red_players['red2_tag']), red2_tab),
-                       sg.Tab((red_players['red3_name'] + " " + red_players['red3_tag']), red3_tab),
-                       sg.Tab((red_players['red4_name'] + " " + red_players['red4_tag']), red4_tab),
-                       sg.Tab((red_players['red5_name'] + " " + red_players['red5_tag']), red5_tab)
-
-
-                       ]])]
-
+    l_layout = [[sg.TabGroup([[sg.Tab((red_players['red1_name'] + " " + red_players['red1_tag']), red1_tab),
+                               sg.Tab((red_players['red2_name'] + " " + red_players['red2_tag']), red2_tab),
+                               sg.Tab((red_players['red3_name'] + " " + red_players['red3_tag']), red3_tab),
+                               sg.Tab((red_players['red4_name'] + " " + red_players['red4_tag']), red4_tab),
+                               sg.Tab((red_players['red5_name'] + " " + red_players['red5_tag']), red5_tab)]],
+                             title_color='red',
+                             selected_title_color='green', tab_location='topleft'
+                             )]
     ]
 
+    r_layout = [[sg.TabGroup([[sg.Tab((blue_players['blue1_name'] + " " + blue_players['blue1_tag']), blue1_tab),
+                               sg.Tab((blue_players['blue2_name'] + " " + blue_players['blue2_tag']), blue2_tab),
+                               sg.Tab((blue_players['blue3_name'] + " " + blue_players['blue3_tag']), blue3_tab),
+                               sg.Tab((blue_players['blue4_name'] + " " + blue_players['blue4_tag']), blue4_tab),
+                               sg.Tab((blue_players['blue5_name'] + " " + blue_players['blue5_tag']), blue5_tab)]],
+                             title_color='blue',
+                             selected_title_color='green', tab_location='topright'
+                             )]
+                ]
+
     layout = [
-        [sg.Column(l_layout, justification="l")]
+        [sg.Column(l_layout, justification="l"), sg.Column(r_layout, justification="r")]
     ]
 
     window = sg.Window("MetaTrak", layout, icon='valorant.ico')
