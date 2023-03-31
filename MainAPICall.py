@@ -1,11 +1,34 @@
+# importing the GUI
+import PySimpleGUI as sg
 # pprint is used when outputting dictionaries when testing and working on the program
 import pprint
 # these modules allow the program to request data from the API and then parsing into a JSON file
 import json
 import requests
-from mainGUI import popup
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
+
+
+def popup(message):
+    """This function is used to create one time windows that display the text given in the parameter message"""
+    # defines the theme of the window
+    sg.theme('DarkBlue')
+    # defines column
+    column_to_be_centered = [
+        [sg.Text(message)],
+        [sg.Push(), sg.Button('OK')]
+    ]
+
+    # uses column and gives a central justification attribute. Also uses VPush and Push to centre text.
+    layout = [
+        [sg.VPush()],
+        [sg.Push(), sg.Column(column_to_be_centered, element_justification='c'), sg.Push()],
+        [sg.VPush()]
+    ]
+    # defines the window and gives it a title and an icon
+    sg.Window('MetaTrak', layout, modal=True, icon='valorant.ico').read(close=True)
+
+
 
 
 def errorCheck(status, function):

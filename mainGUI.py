@@ -280,13 +280,15 @@ def option_menu():
 
 
 def recent_match_summary_option(all_dicts, playername):
+    """This function fetches the 3 previous matches then filters through each match finding the players data
+    such as win or loss and the map they played on as well an image of the agent they were playing"""
     match_arr = []
-    list = ['1', '2', '3']
 
+    # uses iteration to add the 3 previous match IDs to an array
     for i in range(1, 4):
         match_arr.append(all_dicts[0][4][i]['match_id'][0])
-    # pp.pprint(match_arr)
 
+    # requests the match history of each ID and splits them into the match metadata and the individual player stats
     match1 = matchHistory(match_arr[0])
     meta1 = match1[0][1]
     players1 = match1[1]
@@ -299,15 +301,17 @@ def recent_match_summary_option(all_dicts, playername):
     meta3 = match3[0][1]
     players3 = match3[1]
 
-    # print(playername)
-
+    # gets the 3 most recent mmr changes to determine a loss or gain of x rr
     mmr1 = mmr_history[1]["mmr_change"][0]
     mmr2 = mmr_history[2]["mmr_change"][0]
     mmr3 = mmr_history[3]["mmr_change"][0]
 
+    # puts the mmr values into an array and calls the format_rr() function to reformat the array
     rr_array = [mmr1, mmr2, mmr3]
     main = format_rr(rr_array)
 
+    # these for loops iterate through the player dictionary in each match to find the number key
+    # of the player that is logged in
     for i in range(1, 11):
         name = players1[i]['name'][0]
         if name == playername:
@@ -326,6 +330,7 @@ def recent_match_summary_option(all_dicts, playername):
             player_pos3 = i
             # print(i)
 
+    # creates all variables for the players data in each map by using the correct player number key
     character1 = players1[player_pos1]['character'][0]
     image1 = players1[player_pos1]['agent_kill_feed'][0]
     current_tier1 = players1[player_pos1]['current_tier'][0]
@@ -353,8 +358,8 @@ def recent_match_summary_option(all_dicts, playername):
     map3 = meta3['map'][0]
     mode3 = meta3['mode'][0]
 
-    # print(character1, image2, map3)
-
+    # this uses the requests module to fetch the image from the URL and then using the io library
+    # it formats it into something that PySimpleGUI can display
     card1_bytes = requests.get(image1)
     card1_image = Image.open(io.BytesIO(card1_bytes.content))
     card1_png = io.BytesIO()
@@ -377,13 +382,14 @@ def recent_match_summary_option(all_dicts, playername):
     im2 = sg.Image(data=card2_display)
     im3 = sg.Image(data=card3_display)
 
+    # defines the layout using a series of images and text
     layout = [
         [sg.Text("Recent Match Overview")],
-        [im1, sg.Text(current_tier1), sg.Text(mmr1), sg.Text(map1), sg.Text(mode1)],
+        [im1, sg.Text(current_tier1), sg.Text(main[0]), sg.Text(map1), sg.Text(mode1)],
         [sg.Text("Kills: " + str(kills1)), sg.Text("Deaths: " + str(deaths1)), sg.Text("Assists: " + str(assists1))],
-        [im2, sg.Text(current_tier2), sg.Text(mmr2), sg.Text(map2), sg.Text(mode2)],
+        [im2, sg.Text(current_tier2), sg.Text(main[1]), sg.Text(map2), sg.Text(mode2)],
         [sg.Text("Kills: " + str(kills2)), sg.Text("Deaths: " + str(deaths2)), sg.Text("Assists: " + str(assists2))],
-        [im3, sg.Text(current_tier3), sg.Text(mmr3), sg.Text(map3), sg.Text(mode3)],
+        [im3, sg.Text(current_tier3), sg.Text(main[2]), sg.Text(map3), sg.Text(mode3)],
         [sg.Text("Kills: " + str(kills3)), sg.Text("Deaths: " + str(deaths3)), sg.Text("Assists: " + str(assists3))]
     ]
 
@@ -396,16 +402,24 @@ def recent_match_summary_option(all_dicts, playername):
 
 
 def leaderboard_option():
+    """This function fetches the top 999 players and passes them to the leaderboard display window"""
     leader_dict = getLeaderboard("eu", 1000)
     leaderboard_display(leader_dict)
 
 
-types_of_data = ['name', 'tag', 'team', 'level', 'character', 'c_casts', 'e_cast', 'q_casts', 'agent_kill_feed',
+# this array contain all types of data the player can request
+# and is used to create team and player specific dictionaries
+types_of_data = ['name', 'tag', 'team', 'level', 'character', 'c_casts', 'e_cast', 'q_casts', 'x_casts',
+                 'agent_kill_feed',
                  'score', 'kills', 'deaths', 'assists', 'bodyshots', 'headshots', 'legshots',
                  'damage_made', 'damage_received', 'spent_avg', 'spent_overall']
 
 
 def define_players(player: int, red_players: dict, blue_players: dict, players):
+    """This function checks to see if the player belong in the red or blue team
+    and then generates, using f-strings and the array above, a dictionary
+    based on player number, team and the different types of data. Takes the red and blue players dictionaries
+     as parameters and return the 2 dictionaries containing all data"""
     if players[player]['team'][0] == "Red":
         name = f"red{(len(red_players) // 20) + 1}"
         for item in types_of_data:
@@ -418,53 +432,43 @@ def define_players(player: int, red_players: dict, blue_players: dict, players):
 
 
 def match_breakdown_option(all_dicts):
+    """This function fetches the most recent match ID, queries the data and sends it to define_players() to
+    create a player and team specific dictionary. It then creates multiple Tab elements to display
+     the player data in a more compact way"""
     # defines the theme of the window
     sg.theme('DarkBlue')
 
+    # fetches most recent match ID and fetches data using said ID
     match_id = all_dicts[0][4][1]['match_id'][0]
     match = matchHistory(match_id)
+
+    # separates data
     metadata = match[0][1]
     players = match[1]
-    # pp.pprint(metadata)
-    # print("------------------------------------------------------------")
-    # pp.pprint(players)
 
-    red = []
-    blue = []
-
-    for i in range(1, 11):
-        player_team = players[i]['team'][0]
-        if player_team == "Red":
-            red.append(i)
-        elif player_team == "Blue":
-            blue.append(i)
-
-    # print(red)
-    # print("-----------")
-    # print(blue)
-    # print("-----------")
-
-    # asdasd
+    # initialises dictionaries for both the red and blue players
     red_players = {}
     blue_players = {}
+    # calls the define_players() function to create team and player specific dictionaries
     for player in range(1, 11):
         red_players, blue_players = define_players(player, red_players, blue_players, players)
-    # pp.pprint(red_players)
-    # pp.pprint(blue_players)
 
+    # defines all tabs for each team using the dictionaries created by the function above
     red1_tab = [
         [sg.Text("Level: " + str(red_players['red1_level']))],
         [sg.Text("Agent: " + red_players['red1_character'])],
         [sg.Text("C Casts: " + str(red_players['red1_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red1_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red1_q_casts']))],
+        [sg.Text("X Casts: " + str(red_players['red1_x_casts']))],
         [sg.Text("ACS: " + str(red_players['red1_score']))],
         [sg.Text("Kills: " + str(red_players['red1_kills']))],
         [sg.Text("Deaths: " + str(red_players['red1_deaths']))],
         [sg.Text("Assist: " + str(red_players['red1_assists']))],
         [sg.Text("H/S %: " + str(round(((red_players['red1_headshots']) / (red_players['red1_headshots']
-                                                                 + red_players['red1_bodyshots'] + red_players[
-                                                                     'red1_legshots'])) * 100, 2)))],
+                                                                           + red_players['red1_bodyshots'] +
+                                                                           red_players[
+                                                                               'red1_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red1_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red1_damage_received']))]
     ]
@@ -475,13 +479,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(red_players['red2_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red2_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red2_q_casts']))],
+        [sg.Text("X Casts: " + str(red_players['red2_x_casts']))],
         [sg.Text("ACS: " + str(red_players['red2_score']))],
         [sg.Text("Kills: " + str(red_players['red2_kills']))],
         [sg.Text("Deaths: " + str(red_players['red2_deaths']))],
         [sg.Text("Assist: " + str(red_players['red2_assists']))],
         [sg.Text("H/S %: " + str(round(((red_players['red2_headshots']) / (red_players['red2_headshots']
-                                                                 + red_players['red2_bodyshots'] + red_players[
-                                                                     'red2_legshots'])) * 100, 2)))],
+                                                                           + red_players['red2_bodyshots'] +
+                                                                           red_players[
+                                                                               'red2_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red2_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red2_damage_received']))]
     ]
@@ -492,13 +498,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(red_players['red3_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red3_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red3_q_casts']))],
+        [sg.Text("X Casts: " + str(red_players['red3_x_casts']))],
         [sg.Text("ACS: " + str(red_players['red3_score']))],
         [sg.Text("Kills: " + str(red_players['red3_kills']))],
         [sg.Text("Deaths: " + str(red_players['red3_deaths']))],
         [sg.Text("Assist: " + str(red_players['red3_assists']))],
         [sg.Text("H/S %: " + str(round(((red_players['red3_headshots']) / (red_players['red3_headshots']
-                                                                 + red_players['red3_bodyshots'] + red_players[
-                                                                     'red3_legshots'])) * 100, 2)))],
+                                                                           + red_players['red3_bodyshots'] +
+                                                                           red_players[
+                                                                               'red3_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red3_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red3_damage_received']))]
     ]
@@ -509,13 +517,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(red_players['red4_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red4_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red4_q_casts']))],
+        [sg.Text("X Casts: " + str(red_players['red4_x_casts']))],
         [sg.Text("ACS: " + str(red_players['red4_score']))],
         [sg.Text("Kills: " + str(red_players['red4_kills']))],
         [sg.Text("Deaths: " + str(red_players['red4_deaths']))],
         [sg.Text("Assist: " + str(red_players['red4_assists']))],
         [sg.Text("H/S %: " + str(round(((red_players['red4_headshots']) / (red_players['red4_headshots']
-                                                                 + red_players['red4_bodyshots'] + red_players[
-                                                                     'red4_legshots'])) * 100, 2)))],
+                                                                           + red_players['red4_bodyshots'] +
+                                                                           red_players[
+                                                                               'red4_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red4_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red4_damage_received']))]
     ]
@@ -526,13 +536,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(red_players['red5_c_casts']))],
         [sg.Text("E Casts: " + str(red_players['red5_e_cast']))],
         [sg.Text("Q Casts: " + str(red_players['red5_q_casts']))],
+        [sg.Text("X Casts: " + str(red_players['red5_x_casts']))],
         [sg.Text("ACS: " + str(red_players['red5_score']))],
         [sg.Text("Kills: " + str(red_players['red5_kills']))],
         [sg.Text("Deaths: " + str(red_players['red5_deaths']))],
         [sg.Text("Assist: " + str(red_players['red5_assists']))],
         [sg.Text("H/S %: " + str(round(((red_players['red5_headshots']) / (red_players['red5_headshots']
-                                                                 + red_players['red5_bodyshots'] + red_players[
-                                                                     'red5_legshots'])) * 100, 2)))],
+                                                                           + red_players['red5_bodyshots'] +
+                                                                           red_players[
+                                                                               'red5_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(red_players['red5_damage_made']))],
         [sg.Text("Damage Received: " + str(red_players['red5_damage_received']))]
     ]
@@ -543,13 +555,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(blue_players['blue1_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue1_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue1_q_casts']))],
+        [sg.Text("X Casts: " + str(blue_players['blue1_x_casts']))],
         [sg.Text("ACS: " + str(blue_players['blue1_score']))],
         [sg.Text("Kills: " + str(blue_players['blue1_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue1_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue1_assists']))],
         [sg.Text("H/S %: " + str(round(((blue_players['blue1_headshots']) / (blue_players['blue1_headshots']
-                                                                 + blue_players['blue1_bodyshots'] + blue_players[
-                                                                     'blue1_legshots'])) * 100, 2)))],
+                                                                             + blue_players['blue1_bodyshots'] +
+                                                                             blue_players[
+                                                                                 'blue1_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue1_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue1_damage_received']))]
     ]
@@ -560,13 +574,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(blue_players['blue2_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue2_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue2_q_casts']))],
+        [sg.Text("X Casts: " + str(blue_players['blue2_x_casts']))],
         [sg.Text("ACS: " + str(blue_players['blue2_score']))],
         [sg.Text("Kills: " + str(blue_players['blue2_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue2_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue2_assists']))],
         [sg.Text("H/S %: " + str(round(((blue_players['blue2_headshots']) / (blue_players['blue2_headshots']
-                                                                 + blue_players['blue2_bodyshots'] + blue_players[
-                                                                     'blue2_legshots'])) * 100, 2)))],
+                                                                             + blue_players['blue2_bodyshots'] +
+                                                                             blue_players[
+                                                                                 'blue2_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue2_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue2_damage_received']))]
     ]
@@ -577,13 +593,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(blue_players['blue3_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue3_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue3_q_casts']))],
+        [sg.Text("X Casts: " + str(blue_players['blue3_x_casts']))],
         [sg.Text("ACS: " + str(blue_players['blue3_score']))],
         [sg.Text("Kills: " + str(blue_players['blue3_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue3_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue3_assists']))],
         [sg.Text("H/S %: " + str(round(((blue_players['blue3_headshots']) / (blue_players['blue3_headshots']
-                                                                 + blue_players['blue3_bodyshots'] + blue_players[
-                                                                     'blue3_legshots'])) * 100, 2)))],
+                                                                             + blue_players['blue3_bodyshots'] +
+                                                                             blue_players[
+                                                                                 'blue3_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue3_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue3_damage_received']))]
     ]
@@ -594,13 +612,15 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(blue_players['blue4_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue4_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue4_q_casts']))],
+        [sg.Text("X Casts: " + str(blue_players['blue4_x_casts']))],
         [sg.Text("ACS: " + str(blue_players['blue4_score']))],
         [sg.Text("Kills: " + str(blue_players['blue4_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue4_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue4_assists']))],
         [sg.Text("H/S %: " + str(round(((blue_players['blue4_headshots']) / (blue_players['blue4_headshots']
-                                                                 + blue_players['blue4_bodyshots'] + blue_players[
-                                                                     'blue4_legshots'])) * 100, 2)))],
+                                                                             + blue_players['blue4_bodyshots'] +
+                                                                             blue_players[
+                                                                                 'blue4_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue4_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue4_damage_received']))]
     ]
@@ -611,17 +631,29 @@ def match_breakdown_option(all_dicts):
         [sg.Text("C Casts: " + str(blue_players['blue5_c_casts']))],
         [sg.Text("E Casts: " + str(blue_players['blue5_e_cast']))],
         [sg.Text("Q Casts: " + str(blue_players['blue5_q_casts']))],
+        [sg.Text("X Casts: " + str(blue_players['blue5_x_casts']))],
         [sg.Text("ACS: " + str(blue_players['blue5_score']))],
         [sg.Text("Kills: " + str(blue_players['blue5_kills']))],
         [sg.Text("Deaths: " + str(blue_players['blue5_deaths']))],
         [sg.Text("Assist: " + str(blue_players['blue5_assists']))],
         [sg.Text("H/S %: " + str(round(((blue_players['blue5_headshots']) / (blue_players['blue5_headshots']
-                                                                 + blue_players['blue5_bodyshots'] + blue_players[
-                                                                     'blue5_legshots'])) * 100, 2)))],
+                                                                             + blue_players['blue5_bodyshots'] +
+                                                                             blue_players[
+                                                                                 'blue5_legshots'])) * 100, 2)))],
         [sg.Text("Damage Dealt: " + str(blue_players['blue5_damage_made']))],
         [sg.Text("Damage Received: " + str(blue_players['blue5_damage_received']))]
     ]
 
+    # defines the non-player specific data for the match
+    metadata_layout = [
+        [sg.Text("Map: " + metadata['map'][0])],
+        [sg.Text("Game Start: " + metadata['game_start_patched'][0])],
+        [sg.Text("Rounds Played: " + str(metadata['rounds_played'][0]))],
+        [sg.Text("Server: " + metadata['cluster'][0])],
+
+    ]
+
+    # defines the red players tab group
     l_layout = [[sg.TabGroup([[sg.Tab((red_players['red1_name'] + " #" + red_players['red1_tag']),
                                       red1_tab, title_color='white'),
                                sg.Tab((red_players['red2_name'] + " #" + red_players['red2_tag']),
@@ -636,8 +668,9 @@ def match_breakdown_option(all_dicts):
                              selected_title_color='white',
                              tab_location='lefttop'
                              )]
-    ]
+                ]
 
+    # defines the blue players tab group
     r_layout = [[sg.TabGroup([[sg.Tab((blue_players['blue1_name'] + " #" + blue_players['blue1_tag']),
                                       blue1_tab, title_color='white'),
                                sg.Tab((blue_players['blue2_name'] + " #" + blue_players['blue2_tag']),
@@ -655,8 +688,11 @@ def match_breakdown_option(all_dicts):
                              )]
                 ]
 
+    # define the main layout using columns to centre data
     layout = [
-        [sg.Column(l_layout, justification="l"), sg.Column(r_layout, justification="r")]
+        [sg.Column(metadata_layout, justification="c", element_justification="c")],
+        [sg.Column(l_layout, justification="l", element_justification="c"),
+         sg.Column(r_layout, justification="r", element_justification="c")]
     ]
 
     # defines the window and gives it a title and an icon
@@ -668,6 +704,8 @@ def match_breakdown_option(all_dicts):
 
 
 def choice(option_choice, all_dicts, playername):
+    """This function is used to call the specific function when the player
+    decides which data they would like to request"""
     if option_choice == "Recent Match Overview":
         recent_match_summary_option(all_dicts, playername)
     elif option_choice == "Leader Board":
@@ -677,10 +715,13 @@ def choice(option_choice, all_dicts, playername):
 
 
 def leaderboard_display(dict):
+    """This function takes the leaderboard dictionary and creates a sub list depending on the value
+    of the slider element in the GUI """
     # defines the theme of the window
     sg.theme('DarkBlue')
     page = 1
 
+    # this defines a subpage of the dictionary based on the pagenum parameter
     def pagedict(pagenum, dictionary):
         pagestart = (pagenum * 10) - 9
         pageend = (pagenum * 10)
@@ -696,6 +737,8 @@ def leaderboard_display(dict):
 
         return sub_dict
 
+    # This defines the layout using a Slider and many Text elements with keys.
+    # This allow their values to be changed with .update()
     layout = [[sg.Slider(range=(1, 100), orientation='h', change_submits=True, key='slider'),
                sg.Text(str(page), key='text')],
               [sg.Text("Move", key='rank1'), sg.Text("Slider", key='name1'), sg.Text("To", key='tag1'),
@@ -741,8 +784,9 @@ def leaderboard_display(dict):
 
         pg_slider = int(values['slider'])
         pg = pg_slider
-        window['slider'].update(56)
+        window['slider'].update(50)
         window['slider'].update(1)
+        # if the slider value does not match the current page number the text is updated
         if pg != page:
             players = pagedict(pg, dict)
             pagestart = (pg * 10) - 9
@@ -752,33 +796,30 @@ def leaderboard_display(dict):
             window['slider'].update(pg)
             window['text'].update(pg)
 
+            # iterates through each key using f-strings and updates the values
             for i in range(0, 10):
                 window[f'rank{i + 1}'].update(pagestart + i)
                 window[f'name{i + 1}'].update(players[pagestart + i]["Name"][0])
                 window[f'tag{i + 1}'].update(players[pagestart + i]["Tag"][0])
                 window[f'wins{i + 1}'].update(players[pagestart + i]["Wins"][0])
+                # some players choose to have their name and tag anonymous so if
+                # no value is detected then "Anon" is outputted instead
                 if players[pagestart + i]["Name"][0] == "" or players[pagestart + i]["Tag"][0] == "":
                     window[f'name{i + 1}'].update("Anon")
                     window[f'tag{i + 1}'].update("Anon")
 
 
+# the main script that is run when the program is run
 if __name__ == '__main__':
+    # the local login using hashing
     main_login()
-
+    # the gathering of the user RIOT detail and the request of their data from the API
     details = api_login()
     all_dicts = all_data(details[0], details[1])
-    # pp.pprint(all_dicts[0][0])
-
-    # loading()
-    # recent_match_summary_option()
-
+    # main menu prompt
     popup("Close the main menu when you would like to select another option.")
     main_menu()
+    # option choice window
     option_choice = option_menu()
-
-    # print(option_choice[0])
+    # user choice is passed to the choice() function along with their data
     choice(option_choice[0], all_dicts, details[0])
-
-    # leader_data = leaderboard_inp_window()
-    # print(leader_data)
-    # getLeaderboard("eu", int(leader_data[1][0]))
