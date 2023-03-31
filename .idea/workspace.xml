@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="commented API and login (mainGUI WIP)">
+    <list default="true" id="dc9404cc-b446-47d9-aa8e-156e55a5fbab" name="Changes" comment="all commented">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainAPICall.py" beforeDir="false" afterPath="$PROJECT_DIR$/MainAPICall.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mainGUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainGUI.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -377,7 +375,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680207426796</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="all commented">
+      <created>1680256914428</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1680256914428</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -427,7 +432,8 @@
     <MESSAGE value="recent match overview finished" />
     <MESSAGE value="specific match breakdown complete" />
     <MESSAGE value="commented API and login (mainGUI WIP)" />
-    <option name="LAST_COMMIT_MESSAGE" value="commented API and login (mainGUI WIP)" />
+    <MESSAGE value="all commented" />
+    <option name="LAST_COMMIT_MESSAGE" value="all commented" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
