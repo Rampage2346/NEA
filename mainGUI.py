@@ -84,9 +84,9 @@ def new_user_window():
     sg.theme('DarkBlue')
     # defines layout using a series of text boxes, userinput text and buttons
     layout = [
-        [sg.Text('Enter Your New Username:')],
+        [sg.Text('Enter Your New Username (between 4 and 9 characters):')],
         [sg.InputText()],
-        [sg.Text('Enter Your New Password:')],
+        [sg.Text('Enter Your New Password (between 4 and 9 characters):')],
         [sg.InputText()],
         [sg.Button('Submit'), sg.Button('Cancel')]
     ]
@@ -143,9 +143,37 @@ def main_login():
                 exit()
             check = checkPass(login_inp_array[1][0], login_inp_array[1][1])
 
-    # if the user does not have an account a window is called where they can enter their new login
+    # if the user does not have an account a window is called where they can enter their new login, makes
+    # sure that the username and password are within the given length boundaries
     elif login_choice[0] == "I am a new user":
+        len_user = False
+        len_pass = False
         new_user_inp_array = new_user_window()
+        print(new_user_inp_array)
+
+        print(new_user_inp_array[1][0])
+        print(new_user_inp_array[1][1])
+
+        print(len(new_user_inp_array[1][0]))
+        print(len(new_user_inp_array[1][1]))
+
+        if 4 < len(new_user_inp_array[1][0]) < 9:
+            len_user = True
+        if 4 < len(new_user_inp_array[1][1]) < 9:
+            len_pass = True
+
+        print(len_user)
+        print(len_pass)
+
+        while len_user == False or len_pass == False:
+            popup("Please make sure that both your username and password are of the correct length")
+            new_user_inp_array = new_user_window()
+            print(new_user_inp_array)
+            if 4 < len(new_user_inp_array[1][0]) < 9:
+                len_user = True
+            if 4 < len(new_user_inp_array[1][1]) < 9:
+                len_pass = True
+
         if new_user_inp_array[0] == 'Cancel' or new_user_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
         addUser(new_user_inp_array[1][0], new_user_inp_array[1][1])
