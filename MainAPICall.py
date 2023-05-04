@@ -29,26 +29,24 @@ def popup(message):
     sg.Window('MetaTrak', layout, modal=True, icon='valorant.ico').read(close=True)
 
 
-
-
 def errorCheck(status, function):
     """This function is responsible for reading the status codes when requesting data from the API"""
     if status == 400:
-        popup("Request Error (missing query)." + function)
+        popup("Request Error (missing query). " + function)
     elif status == 403:
-        popup("Forbidden to connect to Riot API (mainly maintenance and side patches)." + function)
+        popup("Forbidden to connect to Riot API (mainly maintenance and side patches). " + function)
     elif status == 404:
-        popup("The requested entity was not found." + function)
+        popup("The requested entity was not found. " + function)
     elif status == 408:
-        popup("Timeout while fetching data." + function)
+        popup("Timeout while fetching data. " + function)
     elif status == 429:
-        popup("Rate limit reached" + function)
+        popup("Rate limit reached. " + function)
     elif status == 503:
-        popup("Riot API seems to be down, API unable to connect." + function)
+        popup("Riot API seems to be down, API unable to connect. " + function)
     elif status == 200:
         print("API OK")
     else:
-        popup("Unknown Error" + function + "Please try again later")
+        popup("Unknown Error " + function + " Please try again later.")
 
 
 # the majority or the following functions have very similar structure

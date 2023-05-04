@@ -8,7 +8,7 @@ from PIL import Image
 import io
 # importing algorithms from other python files in the program
 from login import checkPass, addUser
-from MainAPICall import allPlayerData, format_rr, getLeaderboard, matchID, matchHistory
+from MainAPICall import allPlayerData, format_rr, getLeaderboard, matchHistory
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
@@ -31,6 +31,27 @@ def popup(message):
     ]
     # defines the window and gives it a title and an icon
     sg.Window('MetaTrak', layout, modal=True, icon='valorant.ico').read(close=True)
+
+
+def checkLength(new_user_creds):
+    """This function is used to check if the new users username and password meet the length requirement"""
+    len_user = False
+    len_pass = False
+
+    if 4 < len(new_user_creds[1][0]) < 9:
+        len_user = True
+    if 4 < len(new_user_creds[1][1]) < 9:
+        len_pass = True
+
+    while len_user == False or len_pass == False:
+        popup("Please make sure that both your username and password are of the correct length")
+        new_user_creds = new_user_window()
+        if 4 < len(new_user_creds[1][0]) < 9:
+            len_user = True
+        if 4 < len(new_user_creds[1][1]) < 9:
+            len_pass = True
+
+    return len_user, len_pass
 
 
 def login_or_adduser():
@@ -146,33 +167,8 @@ def main_login():
     # if the user does not have an account a window is called where they can enter their new login, makes
     # sure that the username and password are within the given length boundaries
     elif login_choice[0] == "I am a new user":
-        len_user = False
-        len_pass = False
         new_user_inp_array = new_user_window()
-        print(new_user_inp_array)
-
-        print(new_user_inp_array[1][0])
-        print(new_user_inp_array[1][1])
-
-        print(len(new_user_inp_array[1][0]))
-        print(len(new_user_inp_array[1][1]))
-
-        if 4 < len(new_user_inp_array[1][0]) < 9:
-            len_user = True
-        if 4 < len(new_user_inp_array[1][1]) < 9:
-            len_pass = True
-
-        print(len_user)
-        print(len_pass)
-
-        while len_user == False or len_pass == False:
-            popup("Please make sure that both your username and password are of the correct length")
-            new_user_inp_array = new_user_window()
-            print(new_user_inp_array)
-            if 4 < len(new_user_inp_array[1][0]) < 9:
-                len_user = True
-            if 4 < len(new_user_inp_array[1][1]) < 9:
-                len_pass = True
+        checkLength(new_user_inp_array)
 
         if new_user_inp_array[0] == 'Cancel' or new_user_inp_array[0] == sg.WINDOW_CLOSED:
             exit()
@@ -344,19 +340,16 @@ def recent_match_summary_option(all_dicts, playername):
         name = players1[i]['name'][0]
         if name == playername:
             player_pos1 = i
-            # print(i)
 
     for i in range(1, 11):
         name = players2[i]['name'][0]
         if name == playername:
             player_pos2 = i
-            # print(i)
 
     for i in range(1, 11):
         name = players3[i]['name'][0]
         if name == playername:
             player_pos3 = i
-            # print(i)
 
     # creates all variables for the players data in each map by using the correct player number key
     character1 = players1[player_pos1]['character'][0]
